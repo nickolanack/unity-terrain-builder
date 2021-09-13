@@ -7,13 +7,5 @@ public class TerrainTextureStamp : TerrainStamp
 {
 
 
-    public int layerIndex=0;
-
-
-
-
-    public int GetLayerIndex(){
-        return layerIndex;
-    }
    
 }

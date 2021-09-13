@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-class TerrainEdit{
+public class TerrainEdit{
 
 
 
@@ -20,6 +20,11 @@ class TerrainEdit{
      */
     public NeighborResolver neighborResolver;
 
+
+
+    public Vector3 AtCenter(Terrain t){
+        return new Vector3(0.5f, 0f, 0.5f);
+    }
 
 
     public void AtScreenPos(Vector2 pos, TerrainHit callback){
@@ -68,10 +73,10 @@ class TerrainEdit{
 
 
 
-    public void DrawHeight(Vector3 pos, Terrain terrain, TerrainStamp[] stamps){
+    public void DrawHeight(Vector3 pos, Terrain terrain, TerrainTexture[] stamps){
 
         
-        foreach(TerrainStamp stamp in stamps){ //selected.GetComponent<TerrainStamp>();
+        foreach(TerrainTexture stamp in stamps){ //selected.GetComponent<TerrainStamp>();
             Texture2D texture=stamp.GetTexture();
 
             if(texture==null){
@@ -93,11 +98,11 @@ class TerrainEdit{
     }
 
 
-    public void DrawTexture(Vector3 pos, Terrain terrain, TerrainTextureStamp[] stamps){
+    public void DrawTexture(Vector3 pos, Terrain terrain, TerrainTexture[] stamps){
 
         
  
-        foreach(TerrainTextureStamp stamp in stamps){
+        foreach(TerrainTexture stamp in stamps){
         
             Texture2D texture=stamp.GetTexture();
 
@@ -119,7 +124,7 @@ class TerrainEdit{
     
 
 
-    public void DrawDetails(Vector3 pos, Terrain terrain, TerrainDetailStamp[] stamps){
+    public void DrawDetails(Vector3 pos, Terrain terrain, TerrainTexture[] stamps){
 
 
 
@@ -130,7 +135,7 @@ class TerrainEdit{
 
     
 
-            foreach(TerrainDetailStamp stamp in stamps){
+            foreach(TerrainTexture stamp in stamps){
                 Texture2D texture=stamp.GetTexture();
                 if(texture==null){
                     continue;
@@ -282,28 +287,39 @@ class TerrainEdit{
 
 
 
+        int x0=Mathf.Max(0,(int)shift.x);
+        int y0=Mathf.Max(0,(int)shift.y);
+
+        int x1=Mathf.Min(width, (int)(texture.width+shift.x));
+        int y1=Mathf.Min(height, (int)(texture.height+shift.y));
+
+
+        float[,,] values=terrain.terrainData.GetAlphamaps(x0, y0, x1-x0, y1-y0);
+
+
         loopTexture(width, height, shift, texture, delegate(int x, int y, int xh, int yh){
 
-            float[,,] values=terrain.terrainData.GetAlphamaps(x, y, 1, 1);
+            //float[,,] values=terrain.terrainData.GetAlphamaps(x, y, 1, 1);
 
             float value=texture.GetPixel(xh, yh).r*weight;
 
 
             for (int l = 0; l < terrain.terrainData.alphamapTextureCount; l++)
             {
-                values[0,0,l]*=(1-value);
-                Debug.Log(l+": "+values[0,0,l]);
+                values[x-x0,y-y0,l]*=(1-value);
+                //values[0,0,l]*=(1-value);
+                //Debug.Log(l+": "+values[0,0,l]);
             }
-            values[0,0,layer]+=value;
+            values[x-x0,y-y0,layer]+=value;
+            //values[0,0,layer]+=value;
             Debug.Log("*"+layer+": "+values[0,0,layer]);
 
-            terrain.terrainData.SetAlphamaps(x, y, values);
+            //terrain.terrainData.SetAlphamaps(x, y, values);
 
 
         });
 
-
-        //terrain.terrainData.SetDetailLayer(0, 0, layer, map);
+        terrain.terrainData.SetAlphamaps(x0, y0, values);
 
     }
 
