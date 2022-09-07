@@ -15,6 +15,52 @@ using UnityEngine.UIElements;
         public List<PerlinNoiseData> PerlinNoiseDatas = new List<PerlinNoiseData>();
         public List<AddData> AddDatas = new List<AddData>();
         
+
+        public  List<BaseData> GetInputsTo(string NodeGuid){
+
+
+            List<BaseData> list=new List<BaseData>();
+            foreach(NodeLinkData link in NodeLinkDatas){
+                if(link.TargetNodeGuid==NodeGuid){
+                    list.Add(GetData(link.BaseNodeGuid));
+                }
+            }
+
+
+            return list;
+
+
+        }
+
+        public BaseData GetData(string NodeGuid){
+
+
+            foreach(StartData data in StartDatas ){
+                if(data.NodeGuid==NodeGuid){
+                    return data;
+                }
+            }
+
+            foreach(PerlinNoiseData data in PerlinNoiseDatas ){
+                if(data.NodeGuid==NodeGuid){
+                    return data;
+                }
+            }
+
+            foreach(AddData data in AddDatas ){
+                if(data.NodeGuid==NodeGuid){
+                    return data;
+                }
+            }
+
+
+
+
+            return null;
+
+        }
+
+
     }
 
     [System.Serializable]

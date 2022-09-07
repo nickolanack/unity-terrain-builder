@@ -119,11 +119,19 @@ public class ProceduralTerrainMenu : MonoBehaviour
 
     public void ApplyScriptableObject(ProceduralGraphObject flow){
 
+        TerrainEdit editor=new TerrainEdit();
 
-       Debug.Log(flow.StartDatas[0]);
+        Terrain t= GetComponent<Terrain>();
+        StyleMap style=((StartData)flow.StartDatas[0]).GetStyleMap(StyleMap.ForTerrainHeight(t), flow);
+
+        Vector3 pos=editor.AtCenter(t);
+        editor.DrawHeight(pos, t, new TerrainStyle[] {
+            new TerrainStyle(style)
+        });
 
 
     }
+
 
 
     public void GenerateDetail(){

@@ -245,6 +245,16 @@ public class PerlinNoiseData : BaseData
     public float Scale;
     public float Offset;
     public float Seed;
+
+
+    public override StyleMap GetStyleMap(StyleMap input, ProceduralGraphObject graph){
+        StyleMap style=new StyleMap(input.GetWidth(), input.GetHeight(), 0);
+
+        style.SetNoiseOffset((int)Seed*100, (int)Seed*100);
+        style.AddPerlinNoise(Size, Scale, Offset);
+        return style;
+
+     }
 }
 
 

@@ -106,4 +106,10 @@ public class BaseNode : Node
         {
             public string NodeGuid;
             public Vector2 Position;
+
+
+            public virtual StyleMap GetStyleMap(StyleMap input, ProceduralGraphObject graph){
+                return input;
+            }
+
         }

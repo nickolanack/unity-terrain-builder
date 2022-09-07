@@ -13,14 +13,9 @@ using UnityEngine.UIElements;
 
 
         Box boxContainer;
-        float size=5;
-        float scale=1;
-        float offset=0;
+        
 
-
-        FloatField fieldSize;
-        FloatField fieldScale;
-        FloatField fieldOffset;
+        bool normalize=false;
 
 
         Image image;
@@ -102,7 +97,9 @@ using UnityEngine.UIElements;
         	 	map.Add(((PerlinNoiseNode)node).GetStyleMapOut());	
         	 }
         	
-        	 map.Normalize();
+             if(normalize){
+        	   map.Normalize();
+             }
         	
         	 return map;
 
@@ -148,6 +145,8 @@ using UnityEngine.UIElements;
 
         public AddNode SetData(AddData data)
         {
+
+            normalize=data.Normalize;
            
             UpdateTexture();
 
@@ -161,7 +160,24 @@ using UnityEngine.UIElements;
 [System.Serializable]
 public class AddData : BaseData
 {
-   
+
+    public bool Normalize;
+
+
+    public override StyleMap GetStyleMap(StyleMap input, ProceduralGraphObject graph){
+
+
+        StyleMap style= new StyleMap(input.GetWidth(), input.GetHeight(), 0);
+
+        foreach(BaseData data in graph.GetInputsTo(NodeGuid)){
+            style.Add(data.GetStyleMap(input, graph));
+        }
+        if(Normalize){
+            style.Normalize();
+        }
+
+        return style;
+    }
 }
 
 

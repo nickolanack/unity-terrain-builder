@@ -21,36 +21,27 @@ MonoBehaviour:
     BasePortName: Out
     TargetNodeGuid: eafc6e52-d602-4d8a-bba5-6c6f3878ecc7
     TargetPortName: Stylemaps
-  - BaseNodeGuid: f3bd33f0-d475-4cad-80a8-5284bc8b1d1a
-    BasePortName: Out
-    TargetNodeGuid: eafc6e52-d602-4d8a-bba5-6c6f3878ecc7
-    TargetPortName: Stylemaps
   - BaseNodeGuid: eafc6e52-d602-4d8a-bba5-6c6f3878ecc7
     BasePortName: Out
     TargetNodeGuid: 7a308e4b-0884-4ad0-ac55-36b44b5e922f
     TargetPortName: HeightMap
   StartDatas:
   - NodeGuid: 7a308e4b-0884-4ad0-ac55-36b44b5e922f
-    Position: {x: 1454, y: 582}
+    Position: {x: 1228, y: 450}
   PerlinNoiseDatas:
-  - NodeGuid: f8318252-01ae-4045-a046-4c15b2bf219f
-    Position: {x: 301, y: 325}
-    Size: 15
-    Scale: 1.5
-    Offset: -0.5
-    Seed: 3
   - NodeGuid: 3ede3ee4-0885-4d7b-bae9-679cc709582e
-    Position: {x: 33, y: 508}
+    Position: {x: 61, y: 255}
     Size: 25
-    Scale: 1.5
-    Offset: -0.5
-    Seed: 5
-  - NodeGuid: f3bd33f0-d475-4cad-80a8-5284bc8b1d1a
-    Position: {x: 586, y: 236}
-    Size: 7
     Scale: 0.3
-    Offset: -0.4
-    Seed: 0
+    Offset: -0.1
+    Seed: 5
+  - NodeGuid: f8318252-01ae-4045-a046-4c15b2bf219f
+    Position: {x: 437, y: 414}
+    Size: 15
+    Scale: 0.3
+    Offset: -0.1
+    Seed: 3
   AddDatas:
   - NodeGuid: eafc6e52-d602-4d8a-bba5-6c6f3878ecc7
-    Position: {x: 1050, y: 461}
+    Position: {x: 825, y: 340}
+    Normalize: 0

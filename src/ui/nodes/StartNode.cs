@@ -56,7 +56,11 @@ public class StartData : BaseData
 {
 
 
-    
+     public override StyleMap GetStyleMap(StyleMap input, ProceduralGraphObject graph){
+
+       return graph.GetInputsTo(NodeGuid)[0].GetStyleMap(input, graph);
+        
+     }
 
 
 }
