@@ -8,7 +8,7 @@ public class TerrainEdit{
 
 
     public bool additive=true;
-    public bool mergeHeight=true;
+    public bool mergeHeight=false;
 
 
     public delegate void TerrainHit(Vector3 terrainPosition, Terrain terrain);
@@ -71,25 +71,43 @@ public class TerrainEdit{
     }
 
 
+    public float[,] GetHeight(Terrain terrain){
+        return terrain.terrainData.GetHeights(0, 0, terrain.terrainData.heightmapResolution, terrain.terrainData.heightmapResolution);
+    }
 
 
-    public void DrawHeight(Vector3 pos, Terrain terrain, TerrainTexture[] stamps){
+    public float[,] GetSlope(Terrain terrain){
+        return GetSlope(terrain, terrain.terrainData.heightmapResolution, terrain.terrainData.heightmapResolution);
+    }
+    public float[,] GetSlope(Terrain terrain, int width, int height){
+        float[,] map=new float[width, height];
+        for (int y = 0; y < height; y++){
+           for (int x = 0; x < width; x++)
+            {
+                map[x, y]=terrain.terrainData.GetSteepness(y/(float)height,x/(float)width);
+            }
+        }
+        return map;
+    }
+
+    
+    public void DrawHeight(Vector3 pos, Terrain terrain, TerrainStyle[] stamps){
 
         
-        foreach(TerrainTexture stamp in stamps){ //selected.GetComponent<TerrainStamp>();
-            Texture2D texture=stamp.GetTexture();
+        foreach(TerrainStyle stamp in stamps){ //selected.GetComponent<TerrainStamp>();
+            float[,] map=stamp.GetMap(terrain);
 
-            if(texture==null){
+            if(map==null){
                 continue;
             }
 
             int size=terrain.terrainData.heightmapResolution;
 
-            Vector2 offset=CalcTextureShift(pos, terrain.terrainData.heightmapResolution, texture);
+            Vector2 offset=CalcTextureShift(pos, terrain.terrainData.heightmapResolution, map);
 
 
-            DrawTerrainTiles(offset, terrain, size-1, texture.width, delegate(Vector2 shift, Terrain terrain){
-                UpdateHeightMap(shift, texture, stamp.GetScale(), terrain);
+            DrawTerrainTiles(offset, terrain, size-1, map.GetLength(0), delegate(Vector2 shift, Terrain terrain){
+                UpdateHeightMap(shift, map, stamp.GetScale(), terrain);
             });
 
         }
@@ -98,22 +116,43 @@ public class TerrainEdit{
     }
 
 
-    public void DrawTexture(Vector3 pos, Terrain terrain, TerrainTexture[] stamps){
+
+    public float[,] GetTextureLayer(Terrain terrain, int layerId){
+        float[,,] layers= terrain.terrainData.GetAlphamaps(0, 0, terrain.terrainData.alphamapWidth, terrain.terrainData.alphamapHeight);
+        float[,] map=new  float[terrain.terrainData.alphamapWidth, terrain.terrainData.alphamapHeight];
+
+
+        for (int y = 0; y < terrain.terrainData.alphamapHeight; y++){
+           for (int x = 0; x < terrain.terrainData.alphamapWidth; x++)
+            {
+                map[x, y]=layers[x,y,layerId];
+            }
+        }
+
+        return map;
+
+    }
+
+
+
+
+
+    public void DrawTexture(Vector3 pos, Terrain terrain, TerrainStyle[] stamps){
 
         
  
-        foreach(TerrainTexture stamp in stamps){
+        foreach(TerrainStyle stamp in stamps){
         
-            Texture2D texture=stamp.GetTexture();
+            float[,] map=stamp.GetMap(terrain);
 
-            if(texture==null){
+            if(map==null){
                 continue;
             }
 
-            Vector2 offset=CalcTextureShift(pos, terrain.terrainData.alphamapResolution, texture);
+            Vector2 offset=CalcTextureShift(pos, terrain.terrainData.alphamapResolution, map);
 
-            DrawTerrainTiles(offset, terrain, terrain.terrainData.alphamapWidth, texture.width, delegate(Vector2 shift, Terrain terrain){
-                UpdateAlphaMap(shift, texture, stamp.GetLayerIndex(), stamp.GetScale(), terrain);
+            DrawTerrainTiles(offset, terrain, terrain.terrainData.alphamapWidth, map.GetLength(0), delegate(Vector2 shift, Terrain terrain){
+                UpdateAlphaMap(shift, map, stamp.GetLayerIndex(), stamp.GetScale(), terrain);
             });
                 
             
@@ -124,7 +163,7 @@ public class TerrainEdit{
     
 
 
-    public void DrawDetails(Vector3 pos, Terrain terrain, TerrainTexture[] stamps){
+    public void DrawDetails(Vector3 pos, Terrain terrain, TerrainStyle[] stamps){
 
 
 
@@ -135,16 +174,16 @@ public class TerrainEdit{
 
     
 
-            foreach(TerrainTexture stamp in stamps){
-                Texture2D texture=stamp.GetTexture();
-                if(texture==null){
+            foreach(TerrainStyle stamp in stamps){
+                float[,] map=stamp.GetMap(terrain);
+                if(map==null){
                     continue;
                 }
 
-                Vector2 offset=CalcTextureShift(pos, terrain.terrainData.detailResolution, texture);
+                Vector2 offset=CalcTextureShift(pos, terrain.terrainData.detailResolution, map);
 
-                DrawTerrainTiles(offset, terrain, terrain.terrainData.detailWidth, texture.width, delegate(Vector2 shift, Terrain terrain){
-                    UpdateDetailLayer(shift, texture, stamp.GetLayerIndex(), terrain);
+                DrawTerrainTiles(offset, terrain, terrain.terrainData.detailWidth, map.GetLength(0), delegate(Vector2 shift, Terrain terrain){
+                    UpdateDetailLayer(shift, map, stamp.GetLayerIndex(), terrain);
                 });
                     
                 
@@ -199,10 +238,10 @@ public class TerrainEdit{
 
 
 
-    Vector2 CalcTextureShift(Vector3 pos, float resolution, Texture2D texture){
+    Vector2 CalcTextureShift(Vector3 pos, float resolution, float[,] map){
 
           Vector3 detailPos=pos*resolution;
-          Vector2 p=new Vector2(texture.width/2, texture.height/2);//centerDetail*terrain.terrainData.detailResolution/terrain.terrainData.size.x;
+          Vector2 p=new Vector2(map.GetLength(0)/2, map.GetLength(1)/2);//centerDetail*terrain.terrainData.detailResolution/terrain.terrainData.size.x;
           return new Vector2((int)(detailPos.x-p.x), (int)(detailPos.z-p.y));
     }
 
@@ -237,7 +276,7 @@ public class TerrainEdit{
 
 
 
-    void UpdateHeightMap(Vector2 shift, Texture2D texture, float scale, Terrain terrain){
+    void UpdateHeightMap(Vector2 shift, float[,] map, float scale, Terrain terrain){
 
        
         float[,] heights=terrain.terrainData.GetHeights(0, 0, terrain.terrainData.heightmapResolution, terrain.terrainData.heightmapResolution);
@@ -254,8 +293,8 @@ public class TerrainEdit{
         }
 
 
-        loopTexture(width, height, shift, texture, delegate(int x, int y, int xh, int yh){ 
-            float value=texture.GetPixel(xh, yh).r;
+        loopTexture(width, height, shift, map, delegate(int x, int y, int xh, int yh){ 
+            float value=map[xh, yh];
             
             value*=scale;
 
@@ -274,37 +313,69 @@ public class TerrainEdit{
     }
 
 
+    public void ResetTerrain(Terrain t){
+        ResetTextures(t);
+        ResetHeight(t, 0);
+        ResetDetails(t);
+    }
 
 
-    void UpdateAlphaMap(Vector2 shift, Texture2D texture, int layer, float weight, Terrain terrain){
+    public void ResetHeight(Terrain terrain, float value){  
 
-        float[,,] map = new float[terrain.terrainData.alphamapWidth, terrain.terrainData.alphamapHeight,terrain.terrainData.alphamapTextureCount];
 
-        //TODO: use map. and write entire map back at end
+           float[,] heights=terrain.terrainData.GetHeights(0, 0, terrain.terrainData.heightmapResolution, terrain.terrainData.heightmapResolution);
+            //int width = texture.width;
+            //int height = texture.height;
 
-        int width = map.GetLength(0); // read from file
-        int height = map.GetLength(1); // read from file
+            int width=heights.GetLength(0);
+            int height=heights.GetLength(1);
+
+
+            for (int y = 0; y < height; y++){
+               for (int x = 0; x < width; x++)
+                {
+
+                    heights[x, y]=value;
+                }
+            }
+            
+            terrain.terrainData.SetHeights(0, 0, heights);
+            terrain.terrainData.SyncHeightmap();
+            
+        }
+
+
+
+    void UpdateAlphaMap(Vector2 shift, float[,] map, int layer, float weight, Terrain terrain){
+
+     
+        //Note: when running in editor mode terrain.terrainData.alphamapTextureCount returns 1!
+        float[,,] m= terrain.terrainData.GetAlphamaps(0,0, 1, 1);
+        int alphamapTextureCount=m.GetLength(2);
+
+
+        int width = terrain.terrainData.alphamapWidth;
+        int height = terrain.terrainData.alphamapHeight;
 
 
 
         int x0=Mathf.Max(0,(int)shift.x);
         int y0=Mathf.Max(0,(int)shift.y);
 
-        int x1=Mathf.Min(width, (int)(texture.width+shift.x));
-        int y1=Mathf.Min(height, (int)(texture.height+shift.y));
+        int x1=Mathf.Min(width, (int)(map.GetLength(0)+shift.x));
+        int y1=Mathf.Min(height, (int)(map.GetLength(1)+shift.y));
 
 
         float[,,] values=terrain.terrainData.GetAlphamaps(x0, y0, x1-x0, y1-y0);
 
 
-        loopTexture(width, height, shift, texture, delegate(int x, int y, int xh, int yh){
-
-            //float[,,] values=terrain.terrainData.GetAlphamaps(x, y, 1, 1);
-
-            float value=texture.GetPixel(xh, yh).r*weight;
+        loopTexture(width, height, shift, map, delegate(int x, int y, int xh, int yh){
 
 
-            for (int l = 0; l < terrain.terrainData.alphamapTextureCount; l++)
+            float value=map[xh, yh]*weight;
+
+
+            for (int l = 0; l < alphamapTextureCount; l++)
             {
                 values[x-x0,y-y0,l]*=(1-value);
                 //values[0,0,l]*=(1-value);
@@ -312,7 +383,7 @@ public class TerrainEdit{
             }
             values[x-x0,y-y0,layer]+=value;
             //values[0,0,layer]+=value;
-            Debug.Log("*"+layer+": "+values[0,0,layer]);
+            //Debug.Log("*"+layer+": "+values[0,0,layer]);
 
             //terrain.terrainData.SetAlphamaps(x, y, values);
 
@@ -323,16 +394,42 @@ public class TerrainEdit{
 
     }
 
+
+    public void ResetTextures(Terrain terrain){  
+
+
+        //Note: when running in editor mode terrain.terrainData.alphamapTextureCount returns 1!
+        float[,,] m= terrain.terrainData.GetAlphamaps(0,0, 1, 1);
+        int alphamapTextureCount=m.GetLength(2);
+
+
+        float[,,] map = new float[terrain.terrainData.alphamapWidth, terrain.terrainData.alphamapHeight, alphamapTextureCount];
+        for (int y = 0; y < terrain.terrainData.alphamapHeight; y++){
+           for (int x = 0; x < terrain.terrainData.alphamapWidth; x++)
+            {
+
+                 map[x, y, 0]=1;
+                for (int l =1; l <alphamapTextureCount; l++)
+                {
+                    map[x, y, l]=0;
+                } 
+            }
+        }
+        
+        terrain.terrainData.SetAlphamaps(0, 0, map);
+        
+    }
+
     protected delegate void Loop(int x, int y, int tx, int ty);
-    void loopTexture(int width, int height, Vector2 shift, Texture2D texture, Loop loop){
+    void loopTexture(int width, int height, Vector2 shift, float[,] map, Loop loop){
 
 
 
         int x0=Mathf.Max(0,(int)shift.x);
         int y0=Mathf.Max(0,(int)shift.y);
 
-        int x1=Mathf.Min(width, (int)(texture.width+shift.x));
-        int y1=Mathf.Min(height, (int)(texture.height+shift.y));
+        int x1=Mathf.Min(width, (int)(map.GetLength(0)+shift.x));
+        int y1=Mathf.Min(height, (int)(map.GetLength(1)+shift.y));
 
             
 
@@ -343,7 +440,6 @@ public class TerrainEdit{
                 int xh=(int)(x-shift.x);
                 int yh=(int)(y-shift.y);
 
-               //if(InRange(xh, texture.width)&&InRange(yh, texture.height)){} // not needed since x, and y are clamped
                 loop(x, y, xh, yh);
             }
         }
@@ -353,29 +449,46 @@ public class TerrainEdit{
 
 
     
-    void UpdateDetailLayer(Vector2 shift, Texture2D texture, int layer, Terrain terrain){
+    void UpdateDetailLayer(Vector2 shift, float[,] map, int layer, Terrain terrain){
 
-        int[,] map = terrain.terrainData.GetDetailLayer(0, 0, terrain.terrainData.detailWidth, terrain.terrainData.detailHeight, layer);
-        int width = map.GetLength(0); // read from file
-        int height = map.GetLength(1); // read from file
+        int[,] detail = terrain.terrainData.GetDetailLayer(0, 0, terrain.terrainData.detailWidth, terrain.terrainData.detailHeight, layer);
+        int width = detail.GetLength(0); // read from file
+        int height = detail.GetLength(1); // read from file
 
 
         if(!additive){
-            SetAll(map, 0);
+            SetAll(detail, 0);
         }
         
-        loopTexture(width, height, shift, texture, delegate(int x, int y, int xh, int yh){ 
+        loopTexture(width, height, shift, map, delegate(int x, int y, int xh, int yh){ 
 
-            if(texture.GetPixel(xh, yh).r>0.5){ 
+            if(map[xh, yh]>0.5){ 
 
                 //NOTE: why do y and x need to be flipped!! I added this to fix placement after testing
-                map[y,x]=1 ;      
+                detail[y,x]=1 ;      
             } 
         });
 
         
 
-        terrain.terrainData.SetDetailLayer(0, 0, layer, map);
+        terrain.terrainData.SetDetailLayer(0, 0, layer, detail);
+
+
+    }
+
+
+    public void ResetDetails(Terrain terrain){
+
+
+
+
+        int[,] map = new int[terrain.terrainData.detailWidth, terrain.terrainData.detailHeight];
+        int width = map.GetLength(0); // read from file
+        
+
+        for(int l=0;l<terrain.terrainData.detailPrototypes.Length;l++){
+            terrain.terrainData.SetDetailLayer(0, 0, l, map);
+        }
 
 
     }

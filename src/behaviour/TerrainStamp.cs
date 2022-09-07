@@ -17,15 +17,20 @@ public class TerrainStamp : MonoBehaviour
 
 
 
-    public TerrainTexture.TextureModifier modifier;
+    public TerrainStyle.TextureModifier modifier;
+    
+
+    public delegate void TextureLoader(string textureName, TextureLoadedEvent callback);
+    public delegate void TextureLoadedEvent(Texture2D texture);
+    public TextureLoader loadTexture;
 
 
 
     void Update(){
 
 
-        if((!loaded)&&AssetLibrary.Library){
-            AssetLibrary.Library.LoadTexture(textureName, delegate(Texture2D t){
+        if((!loaded)&&loadTexture!=null){
+           loadTexture(textureName, delegate(Texture2D t){
 
                 texture=t;
 
@@ -35,16 +40,11 @@ public class TerrainStamp : MonoBehaviour
 
     }
 
-    public Texture2D GetTexture(){
 
-        return GetTerrainTexture().GetTexture();
-
-    }
-
-    public TerrainTexture GetTerrainTexture(){
+    public TerrainStyle GetTerrainTexture(){
         
-        TerrainTexture t=new TerrainTexture();
-        t.texture=texture;
+        TerrainStyle t=TerrainStyle.FromTexture(texture);
+        //t.(texture);
         t.scale=scale;
         t.layerIndex=layerIndex;
         t.modifier=modifier;
