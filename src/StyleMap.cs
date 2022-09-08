@@ -92,6 +92,13 @@ public class StyleMap{
     }
 
 
+
+
+    public StyleMap Subtract(StyleMap map2){
+
+        return Subtract(map2.Get());
+    }
+
     public StyleMap Subtract(float value){
 
         int width=GetWidth();
@@ -101,6 +108,39 @@ public class StyleMap{
             for (int x = 0; x < width; x++)
             {
                 map[x, y]=Mathf.Max(0,map[x, y]-value);             
+            }
+        }
+
+        return this;
+    }
+
+
+
+    public StyleMap Clamp(float min, float max){
+
+        int width=GetWidth();
+        int height=GetHeight();
+
+        for (int y = 0; y < height; y++){
+            for (int x = 0; x < width; x++)
+            {
+                map[x, y]=Mathf.Max(min, Mathf.Min(map[x, y], max));             
+            }
+        }
+
+        return this;
+    }
+
+
+     public StyleMap Subtract(float[,] map2){
+
+        int width=GetWidth();
+        int height=GetHeight();
+
+        for (int y = 0; y < height; y++){
+            for (int x = 0; x < width; x++)
+            {
+                map[x, y]=Mathf.Max(0,map[x, y]-map2[x , y]);             
             }
         }
 
@@ -129,7 +169,7 @@ public class StyleMap{
         for (int y = 0; y < height; y++){
             for (int x = 0; x < width; x++)
             {
-                map[x, y]=map[x,y]+map2[x,y];                
+                map[x, y]=map[x, y]+map2[x, y];                
             }
         }
 
@@ -150,6 +190,25 @@ public class StyleMap{
             {
             
                 float value=map[x, y]*map2[x, y];
+                map[x, y]=value;
+                
+            }
+        }
+
+        return this;
+
+    }
+
+    public StyleMap Mult(float v){
+
+        int width=GetWidth();
+        int height=GetHeight();
+
+        for (int y = 0; y < height; y++){
+            for (int x = 0; x < width; x++)
+            {
+            
+                float value=map[x, y]*v;
                 map[x, y]=value;
                 
             }
@@ -432,6 +491,26 @@ public class StyleMap{
 
         return this;
      }
+
+
+    public StyleMap FlipXY(){
+
+        int width=GetWidth();
+        int height=GetHeight();
+
+        float[,] map2=new float[height, width];
+         for (int y = 0; y < GetHeight(); y++){
+            for (int x = 0; x < GetWidth(); x++)
+            {
+                map2[y, x]=map[x, y];
+            }
+        }
+
+        map=map2;
+        return this;
+
+
+    }
 
     public StyleMap AddPerlinNoise(float size, float scale, float offset){
 

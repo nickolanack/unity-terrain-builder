@@ -32,11 +32,6 @@ public class NodeSearchWindow : ScriptableObject, ISearchWindowProvider
         {
             new SearchTreeGroupEntry(new GUIContent("Terra Editor"),0),
             new SearchTreeGroupEntry(new GUIContent("Terra Node"),1),
-
-
-           // AddNodeSearch("Terrain Heightmap", new StartNode()),
-           // AddNodeSearch("Add PerlinNoise",new PerlinNoiseNode()),
-
         };
 
 

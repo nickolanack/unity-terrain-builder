@@ -86,9 +86,10 @@ public class ProceduralGraphView : GraphView
 
 
 
-        public StartNode CreateStartNode(Vector2 position)
+
+        public OutputNode CreateOutputNode(Vector2 position)
         {
-            return new StartNode(position, editorWindow, this);
+            return new OutputNode(position, editorWindow, this);
         }
 
         public PerlinNoiseNode CreatePerlinNoiseNode(Vector2 position)
@@ -101,15 +102,19 @@ public class ProceduralGraphView : GraphView
             return new AddNode(position, editorWindow, this);
         }
 
+        public ClampNode CreateClampNode(Vector2 position)
+        {
+            return new ClampNode(position, editorWindow, this);
+        }
 
 
         public void CreateNodes(ProceduralGraphObject graphObject)
         {
            
 
-            foreach (StartData node in graphObject.StartDatas)
+            foreach (OutputData node in graphObject.OutputDatas)
             {
-                InitNode(CreateStartNode(node.Position).SetData(node), node);
+                InitNode(CreateOutputNode(node.Position).SetData(node), node);
             }
 
           
@@ -124,7 +129,13 @@ public class ProceduralGraphView : GraphView
                 InitNode(CreateAddNode(node.Position).SetData(node), node);
 
             }
-    
+
+            foreach (ClampData node in graphObject.ClampDatas)
+            {
+                InitNode(CreateClampNode(node.Position).SetData(node), node);
+            }
+
+        
         }
 
         public void InitNode(BaseNode node, BaseData data){
@@ -136,9 +147,10 @@ public class ProceduralGraphView : GraphView
         public List<SearchTreeEntry> SearchNodeTypes(){
 
             return new  List<SearchTreeEntry>{
-                searchWindow.AddNodeSearch("Terrain Heightmap", new StartNode()),
+                searchWindow.AddNodeSearch("Terrain Heightmap", new OutputNode()),
                 searchWindow.AddNodeSearch("PerlinNoise",new PerlinNoiseNode()),
-                searchWindow.AddNodeSearch("Addition",new AddNode())
+                searchWindow.AddNodeSearch("Addition",new AddNode()),
+                searchWindow.AddNodeSearch("Clamp",new ClampNode()),
             };
         }
 
@@ -152,13 +164,19 @@ public class ProceduralGraphView : GraphView
                     AddElement(CreatePerlinNoiseNode(position));
                     return true;
 
-                case StartNode node:
-                    AddElement(CreateStartNode(position));
+                case OutputNode node:
+                    AddElement(CreateOutputNode(position));
                     return true;
 
                 case AddNode node:
                     AddElement(CreateAddNode(position));
                     return true;
+
+                case ClampNode node:
+                    AddElement(CreateClampNode(position));
+                    return true;
+
+         
 
                 default:
                     break;

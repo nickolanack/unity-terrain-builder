@@ -12,131 +12,45 @@ using UnityEngine.UIElements;
         
 
 
-        Box boxContainer;
         
 
         bool normalize=false;
-
-
-        Image image;
+        bool subtract=false;
 
         public AddNode() { }
 
-        public AddNode(Vector2 position, ProceduralEditor editorWindow, ProceduralGraphView graphView)
+        public AddNode(Vector2 position, ProceduralEditor editorWindow, ProceduralGraphView graphView) :base(position, editorWindow, graphView, "Addition/Subtraction")
         {
-            base.editorWindow = editorWindow;
-            base.graphView = graphView;
+            
+            AddStyleSheet("EventNodeStyleSheet");
+           
+        }
 
-            StyleSheet styleSheet = Resources.Load<StyleSheet>("EventNodeStyleSheet");
-            styleSheets.Add(styleSheet);
-
-            title = "Addition";                                    // Set Name
-            SetPosition(new Rect(position, defaultNodeSize));   // Set Position
-            nodeGuid = Guid.NewGuid().ToString();               // Set Guid ID
-
-            // Add standard ports.
+        protected override void AddPorts()
+        {
             AddInputPort("Stylemaps", Port.Capacity.Multi);
             AddOutputPort("Out", Port.Capacity.Multi);
-
-            AddFields();
-
-            RefreshExpandedState();
-            RefreshPorts();
         }
 
-        private void AddFields()
+        protected override void AddFields()
         {
+
+
+            (new NodeField(this)).AddToggleValue("Normalize", ()=>{ return normalize; }, (value)=>{ normalize=value; });
+            (new NodeField(this)).AddToggleValue("Subract", ()=>{ return subtract; }, (value)=>{ subtract=value; });
+            new StyleMapPreview(this);
            
-            ToolbarMenu menu = new ToolbarMenu();
-            menu.text = "...";
-
-            menu.menu.AppendAction("Toggle preview", new Action<DropdownMenuAction>(x => TogglePreviewBox()));
-            titleContainer.Add(menu);
-
-           	TogglePreviewBox();
-
         }
 
-
-        public void OnUpdated() 
-        { 
-          
-            UpdateTexture();
-        }
-
-        public void TogglePreviewBox(){
-
-          	 if(boxContainer!=null){
     
-                mainContainer.Remove(boxContainer);
-                boxContainer=null;
-                image=null;
-                return;
-            }
-
-            boxContainer = new Box();
-            boxContainer.AddToClassList("PreviewBox");
-            mainContainer.Add(boxContainer);
-
-           
-            image=new Image();
-            UpdateTexture();
-        
-           //Image img = GetNewImage("ImagePreview", "ImagePreviewLeft");
-            boxContainer.Add(image);
-
-        }
-
-
-        public StyleMap GetStyleMapOut(){
-
-
-        	 StyleMap map=new StyleMap(200,200,0);
-
-        	 foreach(BaseNode node in PreviousNodes()){
-        	 	map.Add(((PerlinNoiseNode)node).GetStyleMapOut());	
-        	 }
-        	
-             if(normalize){
-        	   map.Normalize();
-             }
-        	
-        	 return map;
-
-        }
-
-
-
-        public void UpdateTexture(){
- 
-     		 Texture2D texture = new Texture2D(200, 200);
-
-            StyleMap style=GetStyleMapOut();
-
-            for (int y = 0; y < 200; y++){
-               for (int x = 0; x < 200; x++)
-                {
-                     float c=style.GetAt(x,y);
-                     texture.SetPixel(x, y, new Color(c, c, c));
-                }
-            }
-
-            texture.Apply();
-
-
-            image.image=texture;
-        }
-
-        
-
-
-        public AddData GetNodeData()
+        public override BaseData GetNodeData()
         {
             AddData nodeData = new AddData()
             {
                 NodeGuid = NodeGuid,
                 Position = GetPosition().position,
-
+                Normalize = normalize,
+                Subtract = subtract
             };
 
             return nodeData;
@@ -147,9 +61,9 @@ using UnityEngine.UIElements;
         {
 
             normalize=data.Normalize;
-           
-            UpdateTexture();
+            subtract=data.Subtract;
 
+            base.SetData();
             return this;
 
         }
@@ -162,22 +76,42 @@ public class AddData : BaseData
 {
 
     public bool Normalize;
+    public bool Subtract;
 
 
-    public override StyleMap GetStyleMap(StyleMap input, ProceduralGraphObject graph){
+
+    public override StyleMap GetStyleMap(StyleMap input, List<StyleMap> inputs){
+       
+        StyleMap map= new StyleMap(input.GetWidth(), input.GetHeight(), 0);
 
 
-        StyleMap style= new StyleMap(input.GetWidth(), input.GetHeight(), 0);
+       
 
-        foreach(BaseData data in graph.GetInputsTo(NodeGuid)){
-            style.Add(data.GetStyleMap(input, graph));
+        bool sub=false;
+        foreach(StyleMap style in inputs){
+
+            if(sub){
+                 Debug.Log(NodeGuid+" Subtract map");
+                 map.Subtract(style);
+            }else{
+                Debug.Log(NodeGuid+" Add map");
+                map.Add(style);
+                if(Subtract){
+                    sub=true;
+                } 
+            }
+            
         }
         if(Normalize){
-            style.Normalize();
+            map.Normalize();
         }
 
-        return style;
+        map.Clamp(0,1);
+
+        return map;
     }
+
+    
 }
 
 

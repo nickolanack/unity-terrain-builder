@@ -7,23 +7,61 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 
-public class BaseNode : Node
+public abstract class BaseNode : Node
 {
     protected string nodeGuid;
     protected ProceduralGraphView graphView;
     protected ProceduralEditor editorWindow;
-    protected Vector2 defaultNodeSize = new Vector2(200, 250);
+    protected Vector2 defaultNodeSize = new Vector2(150, 150);
+
+
+    public event Action OnSetData = delegate { };
+    public event Action OnUpdatedData = delegate { };
 
     public string NodeGuid { get => nodeGuid; set => nodeGuid = value; }
 
     public BaseNode()
     {
-        StyleSheet styleSheet = Resources.Load<StyleSheet>("NodeStyleSheet");
-        styleSheets.Add(styleSheet);
+        AddStyleSheet("NodeStyleSheet");   
     }
 
 
+    public void AddStyleSheet(string name){
 
+        StyleSheet styleSheet = Resources.Load<StyleSheet>(name);
+        if(styleSheet!=null){
+            styleSheets.Add(styleSheet);
+        }
+    }
+
+    public BaseNode(Vector2 position, ProceduralEditor editorWindow, ProceduralGraphView graphView, string nodeTitle) : this()
+    {
+
+        this.editorWindow = editorWindow;
+        this.graphView = graphView;
+
+        title = nodeTitle;
+
+
+        SetPosition(new Rect(position, defaultNodeSize));   // Set Position
+        nodeGuid = Guid.NewGuid().ToString();               // Set Guid ID
+
+        AddPorts();
+        AddFields();
+
+        RefreshExpandedState();
+        RefreshPorts();
+
+    }
+
+    protected virtual void AddFields()
+    {
+
+    }
+
+    protected virtual void AddPorts()
+    {
+    }
 
     public Port AddOutputPort(string name, Port.Capacity capacity = Port.Capacity.Single)
     {
@@ -33,12 +71,7 @@ public class BaseNode : Node
         return outputPort;
     }
 
-    /// <summary>
-    /// Add a port to the inputContainer.
-    /// </summary>
-    /// <param name="name">The name of port.</param>
-    /// <param name="capacity">Can it accept multiple or a single one.</param>
-    /// <returns>Get the port that was just added to the inputContainer.</returns>
+ 
     public Port AddInputPort(string name, Port.Capacity capacity = Port.Capacity.Multi)
     {
         Port inputPort = GetPortInstance(Direction.Input, capacity);
@@ -59,10 +92,29 @@ public class BaseNode : Node
 
     }
 
+    public StyleMap GetStyleMapOut(){
+        return GetNodeData().GetStyleMap(new StyleMap(200,150,0),  InputNodeStyleMaps());
+    }
 
 
+    public abstract BaseData GetNodeData();
 
-    public  List<BaseNode> PreviousNodes(){
+
+    public void SetData(){
+        OnSetData();
+    }
+
+    public void UpdatedData(){
+       
+        OnUpdatedData();
+
+        foreach(BaseNode node in OutputNodes()){
+           node.UpdatedData();  
+        }
+    }
+
+
+    public  List<BaseNode> InputNodes(){
 
         List<BaseNode> list=new List<BaseNode>();
 
@@ -77,7 +129,20 @@ public class BaseNode : Node
 
     }
 
-    public  List<BaseNode> NextNodes(){
+
+     public  List<StyleMap> InputNodeStyleMaps(){
+
+        List<StyleMap> list=new List<StyleMap>();
+
+
+         foreach(BaseNode node in InputNodes()){
+            list.Add(node.GetStyleMapOut());
+         }
+        return list;    
+
+    }
+
+    public  List<BaseNode> OutputNodes(){
 
         List<BaseNode> list=new List<BaseNode>();
 
@@ -95,21 +160,34 @@ public class BaseNode : Node
 }
 
 
-
-// using System.Collections;
-        // using System.Collections.Generic;
-        // using UnityEngine;
-
-
-        [System.Serializable]
-        public class BaseData
-        {
-            public string NodeGuid;
-            public Vector2 Position;
+[System.Serializable]
+public class BaseData
+{
+    public string NodeGuid;
+    public Vector2 Position;
 
 
-            public virtual StyleMap GetStyleMap(StyleMap input, ProceduralGraphObject graph){
-                return input;
-            }
+    public virtual StyleMap GetStyleMap(StyleMap input, List<StyleMap> inputs){
+        return input;
+    }
 
+    public StyleMap GetStyleMap(StyleMap input, ProceduralGraphObject graph, string portName){
+       return graph.GetInputsTo(NodeGuid, portName)[0].GetStyleMap(input, graph);
+    }
+
+
+    public StyleMap GetStyleMap(StyleMap input, ProceduralGraphObject graph){
+
+        List<StyleMap> inputs =new List<StyleMap>();
+    
+        StyleMap style= new StyleMap(input.GetWidth(), input.GetHeight(), 0);
+
+        foreach(BaseData data in graph.GetInputsTo(NodeGuid)){
+            inputs.Add(data.GetStyleMap(input, graph));
         }
+
+        return GetStyleMap(input, inputs);
+
+    }
+
+}

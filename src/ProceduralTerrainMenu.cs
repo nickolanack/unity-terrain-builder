@@ -1,5 +1,8 @@
 //C# Example (LookAtPoint.cs)
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
 [ExecuteInEditMode]
 public class ProceduralTerrainMenu : MonoBehaviour
 {
@@ -45,12 +48,7 @@ public class ProceduralTerrainMenu : MonoBehaviour
     public int textureGrass=0;
     public int textureAltGrass=1;
     public int textureWeedGrass=2;
-    public int textureDirt=3;
-    public int textureSand=4;
-    public int textureSandAlt=5;
-    public int textureGravel=6;
-
-
+ 
 
     public bool enableDetail=true;
 
@@ -63,7 +61,6 @@ public class ProceduralTerrainMenu : MonoBehaviour
         
         if(enableHeight){
             editor.ResetHeight(t, 0);
-            editor.ResetHeight(neighbour, 0);
         }
         
         if(enableTexture){
@@ -96,17 +93,8 @@ public class ProceduralTerrainMenu : MonoBehaviour
         }
 
 
-        if(enableHeight){
-            GenerateHeight();
-        }
-
         if(enableWater){
             GenerateWater();
-        }
-
-
-        if(enableTexture){
-            GenerateTextures();
         }
 
 
@@ -120,14 +108,51 @@ public class ProceduralTerrainMenu : MonoBehaviour
     public void ApplyScriptableObject(ProceduralGraphObject flow){
 
         TerrainEdit editor=new TerrainEdit();
-
+        
         Terrain t= GetComponent<Terrain>();
-        StyleMap style=((StartData)flow.StartDatas[0]).GetStyleMap(StyleMap.ForTerrainHeight(t), flow);
-
+        editor.ResetTextures(t);
         Vector3 pos=editor.AtCenter(t);
-        editor.DrawHeight(pos, t, new TerrainStyle[] {
-            new TerrainStyle(style)
-        });
+
+        foreach(OutputData terrainNodeData in flow.OutputDatas){
+
+            if(flow.PortHasInputs(terrainNodeData, "HeightMap")){
+                
+                StyleMap height=terrainNodeData.GetStyleMap(StyleMap.ForTerrainHeight(t), flow, "HeightMap");
+              
+                Debug.Log("Generated Height Map");
+
+                editor.DrawHeight(pos, t, new TerrainStyle[] {
+                    new TerrainStyle(height)
+                });
+            }else{
+                 Debug.Log("No Height Map");
+            }
+
+
+            List<TerrainStyle> styles=new List<TerrainStyle>();
+
+            for(int index=0; index<=10; index++){
+
+                string port="TerrainDetail"+index;
+
+                if(flow.PortHasInputs(terrainNodeData, port)){
+                    StyleMap texture1=terrainNodeData.GetStyleMap(StyleMap.ForTerrainTexture(t), flow, port);
+
+                    Debug.Log("Generate Texture Map: "+port);
+
+                    styles.Add(new TerrainStyle(texture1.FlipXY(), index));
+                }
+
+            }
+
+            if(styles.Count>0){
+
+                editor.DrawTexture(pos, t,  styles);
+            }
+
+        }
+
+
 
 
     }
@@ -165,173 +190,7 @@ public class ProceduralTerrainMenu : MonoBehaviour
 
 
 
-    public void GenerateTextures(){
 
-        Terrain t=GetComponent<Terrain>();
-        TerrainEdit editor=new TerrainEdit();
-        Vector3 pos=editor.AtCenter(t);
-
-
-       
-        StyleMap heightMap=StyleMap.ForTerrainTexture(t)
-            .SetValues(editor.GetHeight(t)) //auto resizes
-            .Normalize();
-
-
-         
-        editor.DrawTexture(pos, t,  new TerrainStyle[] {new TerrainStyle(heightMap, textureDirt)});
-        
-       
-        StyleMap beachMask=StyleMap.ForTerrainTexture(t)
-            .SetValues(heightMap.Get())
-            .MaskLessThanTerrainHeight(waterLevel+6f, t)
-            .Blur(4, 2);
-
-
-        StyleMap landMask=StyleMap.ForTerrainTexture(t)
-            .SetValues(beachMask.Get())
-            .Invert();
-         
-
-
-        StyleMap sand=StyleMap.ForTerrainTexture(t)
-            .SetValues(beachMask.Get());
-
-        StyleMap sand2=StyleMap.ForTerrainTexture(t)
-            .SetValues(beachMask.Get())
-            .Mult(
-                StyleMap.ForTerrainTexture(t)
-                    .AddPerlinNoise(0.5f, 0.8f, -0.2f)
-                    .AddPerlinNoise(3f, 0.8f, -0.2f)
-                    .Normalize()
-                    .Blur(2, 1)
-            );
-
-        editor.DrawTexture(pos, t,  new TerrainStyle[] {
-            new TerrainStyle(sand, textureSand),
-            new TerrainStyle(sand2, textureSandAlt)
-        });
-
-
-        
-       StyleMap altGrass= StyleMap.ForTerrainTexture(t)
-            .AddPerlinNoise(0.5f, 1f, -0.4f)
-            .Add( 
-                StyleMap.ForTerrainTexture(t)
-                    .AddPerlinNoise(2f, 1f, -0.3f)
-            )
-            .Add( 
-                StyleMap.ForTerrainTexture(t)
-                    .AddPerlinNoise(10, 1f, -0.3f)
-            )
-            .Normalize()
-            .Mult(landMask);
-        
-
-
-
-
-        
-        StyleMap weedGrass= StyleMap.ForTerrainTexture(t)
-            .AddPerlinNoise(7, 0.2f, -0.1f)
-            .AddPerlinNoise(5, 0.2f, -0.1f);
-   
-
-        StyleMap slopeMask=StyleMap.ForTerrainTexture(t)
-            .Then(delegate(StyleMap slope){
-                slope.SetValues(editor.GetSlope(t, slope.GetWidth(), slope.GetHeight()));
-            })
-            .Normalize();
-        
-        StyleMap gravel=StyleMap.ForTerrainTexture(t)
-            //.SetValues(1)
-            .AddPerlinNoise(7, 0.3f, 0)
-            .AddPerlinNoise(2, 0.3f, 0)
-            .Add(0.3f)
-            //.Normalize()
-            .Mult(slopeMask);
-
-                
-         
-
-
-        // Vector3 pos=editor.AtCenter(t);
-         editor.DrawTexture(pos, t,  new TerrainStyle[] {
-            new TerrainStyle(weedGrass, textureWeedGrass), 
-            new TerrainStyle(altGrass,textureAltGrass),
-            new TerrainStyle(gravel,textureGravel),
-            
-            /*, tex2, tex3*/});
-
-
-    }
-
-
-
-    public void GenerateHeight(){
-
-        Terrain t=GetComponent<Terrain>();
-
-
-        int x=t.terrainData.heightmapResolution*Random.Range(0, 1000);
-        int y=t.terrainData.heightmapResolution*Random.Range(0, 1000);
-
-
-        GenerateTerrainHeight(t, x, y);
-        GenerateTerrainHeight(neighbour, x-1000*t.terrainData.heightmapResolution, y);
-
-    }
-
-
-    void GenerateTerrainHeight(Terrain t, int x, int y){
-         
-        
-        TerrainEdit editor=new TerrainEdit();
-    
-
-
-        StyleMap style=StyleMap.ForTerrainHeight(t)
-                    .SetNoiseOffset(x, y)
-                    .AddPerlinNoise(scale0, 1f, 0f)
-                    .Then(delegate(StyleMap map){
-
-                        StyleMap.ForTerrainHeight(t)
-                            .SetNoiseOffset(x, y)
-                            .AddPerlinNoise(scale1, 1f, - flattenBottom)
-                            .Normalize()
-                            .Then(delegate(StyleMap tmp){
-                                 map.Mult(tmp)
-                                    .Scale(ratio);
-                            })
-                            .Scale(1-ratio)
-                            .Then(delegate(StyleMap tmp){
-                                 map.Add(tmp);
-                            });
-                    })
-                    .ScaleTerrainHeight(height, t);
-                    // .Add(
-                    //     StyleMap.ForTerrainHeight(t)
-                    //         .AddPerlinNoise(3f, 1f, 0)
-                    //         .Mult(
-                    //             StyleMap.ForTerrainHeight(t)
-                    //                 .AddPerlinNoise(25f, 1f, -0.7f)
-                    //                 .Normalize()
-                    //         )
-                    //         .ScaleTerrainHeight(height/5, t)
-                    // )
-                    //.Blur(5,2)
-                    
-
-                    //.Get()
-
-
-
-
-        Vector3 pos=editor.AtCenter(t);
-        editor.DrawHeight(pos, t, new TerrainStyle[] {
-            new TerrainStyle(style)
-        });
-    }
 
     public void GenerateWater(){
 

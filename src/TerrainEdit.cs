@@ -135,7 +135,9 @@ public class TerrainEdit{
 
 
 
-
+    public void DrawTexture(Vector3 pos, Terrain terrain, List<TerrainStyle> stamps){
+        DrawTexture(pos, terrain, stamps.ToArray());
+    }
 
     public void DrawTexture(Vector3 pos, Terrain terrain, TerrainStyle[] stamps){
 

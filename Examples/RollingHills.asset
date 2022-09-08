@@ -1,0 +1,145 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa1a61d98c86d4dfbbd8bcde6586e5fd, type: 3}
+  m_Name: RollingHills
+  m_EditorClassIdentifier: 
+  NodeLinkDatas:
+  - BaseNodeGuid: 019a971a-c6a2-4006-8a49-8c8626a4e34c
+    BasePortName: Out
+    TargetNodeGuid: ab17ca6a-c7c9-4d01-aab7-554a85413052
+    TargetPortName: Stylemaps
+  - BaseNodeGuid: 019a971a-c6a2-4006-8a49-8c8626a4e34c
+    BasePortName: Out
+    TargetNodeGuid: 3c5c3019-4060-4bba-99f2-c70fb4391abc
+    TargetPortName: Stylemap
+  - BaseNodeGuid: 019a971a-c6a2-4006-8a49-8c8626a4e34c
+    BasePortName: Out
+    TargetNodeGuid: ca77fbae-d369-41ba-9951-f4b1ef564a90
+    TargetPortName: Stylemap
+  - BaseNodeGuid: 2c7c5bc8-90bf-45a0-80ae-bc98cace9006
+    BasePortName: Out
+    TargetNodeGuid: ab17ca6a-c7c9-4d01-aab7-554a85413052
+    TargetPortName: Stylemaps
+  - BaseNodeGuid: 0224b72b-4d91-4c9b-bcfd-c9250882d45f
+    BasePortName: Out
+    TargetNodeGuid: ab17ca6a-c7c9-4d01-aab7-554a85413052
+    TargetPortName: Stylemaps
+  - BaseNodeGuid: ab17ca6a-c7c9-4d01-aab7-554a85413052
+    BasePortName: Out
+    TargetNodeGuid: f1ac8328-5ea4-4cec-b7b5-075569f18da8
+    TargetPortName: Stylemap
+  - BaseNodeGuid: 0e178060-c990-4c78-ae2d-9a8a711399e6
+    BasePortName: Out
+    TargetNodeGuid: abd2ed0d-139d-414e-bcf9-9eeb353eb138
+    TargetPortName: HeightMap
+  - BaseNodeGuid: 3c5c3019-4060-4bba-99f2-c70fb4391abc
+    BasePortName: Out
+    TargetNodeGuid: 8b305a19-9811-4fad-8c90-88984d694401
+    TargetPortName: Stylemap
+  - BaseNodeGuid: ca77fbae-d369-41ba-9951-f4b1ef564a90
+    BasePortName: Out
+    TargetNodeGuid: 8b305a19-9811-4fad-8c90-88984d694401
+    TargetPortName: Stylemap
+  - BaseNodeGuid: ca77fbae-d369-41ba-9951-f4b1ef564a90
+    BasePortName: Out
+    TargetNodeGuid: 2c6501c6-e3b7-4e19-8e85-a1d8effe153f
+    TargetPortName: Stylemap
+  - BaseNodeGuid: f1ac8328-5ea4-4cec-b7b5-075569f18da8
+    BasePortName: Out
+    TargetNodeGuid: 0e178060-c990-4c78-ae2d-9a8a711399e6
+    TargetPortName: Stylemaps
+  - BaseNodeGuid: 8b305a19-9811-4fad-8c90-88984d694401
+    BasePortName: Out
+    TargetNodeGuid: 127f74c8-e732-42e9-bedb-125219957561
+    TargetPortName: Stylemap
+  - BaseNodeGuid: 127f74c8-e732-42e9-bedb-125219957561
+    BasePortName: Out
+    TargetNodeGuid: 0e178060-c990-4c78-ae2d-9a8a711399e6
+    TargetPortName: Stylemaps
+  - BaseNodeGuid: 2c6501c6-e3b7-4e19-8e85-a1d8effe153f
+    BasePortName: Out
+    TargetNodeGuid: abd2ed0d-139d-414e-bcf9-9eeb353eb138
+    TargetPortName: TerrainDetail1
+  OutputDatas:
+  - NodeGuid: abd2ed0d-139d-414e-bcf9-9eeb353eb138
+    Position: {x: 2431, y: 383}
+  PerlinNoiseDatas:
+  - NodeGuid: 019a971a-c6a2-4006-8a49-8c8626a4e34c
+    Position: {x: -1289, y: -626}
+    Size: 30
+    Scale: 0.6
+    Offset: -0.4
+    Seed: 5
+    Normalize: 0
+  - NodeGuid: 0224b72b-4d91-4c9b-bcfd-c9250882d45f
+    Position: {x: -1008, y: -433}
+    Size: 10
+    Scale: 0.2
+    Offset: -0.5
+    Seed: 1
+    Normalize: 0
+  - NodeGuid: 2c7c5bc8-90bf-45a0-80ae-bc98cace9006
+    Position: {x: 400, y: 912}
+    Size: 3
+    Scale: 0.02
+    Offset: 0
+    Seed: 0
+    Normalize: 0
+  AddDatas:
+  - NodeGuid: ab17ca6a-c7c9-4d01-aab7-554a85413052
+    Position: {x: 802, y: 744}
+    Normalize: 0
+  - NodeGuid: 0e178060-c990-4c78-ae2d-9a8a711399e6
+    Position: {x: 1967, y: 592}
+    Normalize: 0
+  ClampDatas:
+  - NodeGuid: 127f74c8-e732-42e9-bedb-125219957561
+    Position: {x: 1491, y: 374}
+    Min: 0
+    Max: 0.05
+    Prenormalize: 0
+    Invert: 0
+    Scale: 1
+  - NodeGuid: f1ac8328-5ea4-4cec-b7b5-075569f18da8
+    Position: {x: 1502, y: 856}
+    Min: 0
+    Max: 0.05
+    Prenormalize: 0
+    Invert: 0
+    Scale: 0
+  - NodeGuid: ca77fbae-d369-41ba-9951-f4b1ef564a90
+    Position: {x: -538, y: -946}
+    Min: 0
+    Max: 1
+    Prenormalize: 1
+    Invert: 1
+    Scale: 1
+  - NodeGuid: 3c5c3019-4060-4bba-99f2-c70fb4391abc
+    Position: {x: -100, y: -286}
+    Min: 0
+    Max: 1
+    Prenormalize: 0
+    Invert: 1
+    Scale: 1
+  - NodeGuid: 2c6501c6-e3b7-4e19-8e85-a1d8effe153f
+    Position: {x: 1956, y: 84}
+    Min: -1
+    Max: 1
+    Prenormalize: 0
+    Invert: 1
+    Scale: 1
+  SubtractDatas:
+  - NodeGuid: 8b305a19-9811-4fad-8c90-88984d694401
+    Position: {x: 1097, y: 280}
+    Min: 0
+    Max: 0
+    Normalize: 1

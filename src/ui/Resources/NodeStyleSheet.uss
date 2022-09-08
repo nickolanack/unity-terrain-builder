@@ -37,7 +37,7 @@
 }
 
 .TextBox{
-	width:260px;
+	width:200px;
 	white-space: normal;
 }
 

@@ -33,6 +33,9 @@ public class ProceduralLoader
         ClearGraph();
         graphView.CreateNodes(graphObject);
         ConnectNodes(graphObject);
+
+
+
     }
 
     #region Save
@@ -58,32 +61,9 @@ public class ProceduralLoader
 
     private void SaveNodes(ProceduralGraphObject graphObject)
     {
-        graphObject.PerlinNoiseDatas.Clear();
-        graphObject.StartDatas.Clear();
-        graphObject.AddDatas.Clear();
-   
 
-        nodes.ForEach(node =>
-        {
-            switch (node)
-            {
-              
-                case StartNode startNode:
-                    graphObject.StartDatas.Add(startNode.GetNodeData());
-                    break;
-              
-                case PerlinNoiseNode perlinNoiseNode:
-                    graphObject.PerlinNoiseDatas.Add(perlinNoiseNode.GetNodeData());
-                    break;
+        graphObject.SaveDatas(nodes);
 
-                case AddNode addNode:
-                    graphObject.AddDatas.Add(addNode.GetNodeData());
-                    break;
- 
-                default:
-                    break;
-            }
-        });
     }
 
 
@@ -120,11 +100,26 @@ public class ProceduralLoader
                 if (targetNode == null)
                     continue;
 
-                foreach (Port item in allOutputPorts)
+                foreach (Port source in allOutputPorts)
                 {
-                    if (item.portName == connections[j].BasePortName)
+                    if (source.portName == connections[j].BasePortName)
                     {
-                        LinkNodesTogether(item, (Port)targetNode.inputContainer[0]);
+                        //LinkNodesTogether(source, (Port)targetNode.inputContainer[0]);
+                        //targetNode.UpdatedData();
+
+                        List<Port> allInputPorts = targetNode.inputContainer.Children().Where(x => x is Port).Cast<Port>().ToList();
+
+
+                        foreach (Port dest in allInputPorts)
+                        {
+                            if (dest.portName == connections[j].TargetPortName)
+                            {
+                                LinkNodesTogether(source, dest);
+                                targetNode.UpdatedData();
+                            }
+                        }
+
+
                     }
                 }
             }

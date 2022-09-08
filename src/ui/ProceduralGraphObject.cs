@@ -11,16 +11,48 @@ using UnityEngine.UIElements;
         public List<NodeLinkData> NodeLinkDatas = new List<NodeLinkData>();
 
 
-        public List<StartData> StartDatas = new List<StartData>();
+        public List<OutputData> OutputDatas = new List<OutputData>();
         public List<PerlinNoiseData> PerlinNoiseDatas = new List<PerlinNoiseData>();
         public List<AddData> AddDatas = new List<AddData>();
+        public List<ClampData> ClampDatas = new List<ClampData>();
         
 
-        public  List<BaseData> GetInputsTo(string NodeGuid){
+        public  bool PortHasInputs(BaseData data, string portName){
+            return PortHasInputs(data.NodeGuid, portName);
+        }
+        public  bool PortHasInputs(string NodeGuid, string portName){
 
 
-            List<BaseData> list=new List<BaseData>();
+
             foreach(NodeLinkData link in NodeLinkDatas){
+
+
+                if(portName!=null&&!link.TargetPortName.Equals(portName)){
+                    continue;
+                }
+                if(link.TargetNodeGuid==NodeGuid){
+                    return true;
+                }
+            }
+
+
+            return false;
+
+
+        }
+
+
+        public  List<BaseData> GetInputsTo(string NodeGuid, string portName){
+             List<BaseData> list=new List<BaseData>();
+            foreach(NodeLinkData link in NodeLinkDatas){
+
+
+                if(portName!=null&&!link.TargetPortName.Equals(portName)){
+                    //Debug.Log(portName+" "+link.TargetPortName);
+                    continue;
+                }
+                //Debug.Log(link.TargetPortName);
+
                 if(link.TargetNodeGuid==NodeGuid){
                     list.Add(GetData(link.BaseNodeGuid));
                 }
@@ -28,14 +60,17 @@ using UnityEngine.UIElements;
 
 
             return list;
+        }
+        public  List<BaseData> GetInputsTo(string NodeGuid){
 
-
+            return GetInputsTo(NodeGuid, null);
+        
         }
 
         public BaseData GetData(string NodeGuid){
 
 
-            foreach(StartData data in StartDatas ){
+            foreach(OutputData data in OutputDatas ){
                 if(data.NodeGuid==NodeGuid){
                     return data;
                 }
@@ -53,12 +88,63 @@ using UnityEngine.UIElements;
                 }
             }
 
+            foreach(ClampData data in ClampDatas){
+                if(data.NodeGuid==NodeGuid){
+                    return data;
+                }
+            }
+
+
+           
 
 
 
             return null;
 
         }
+
+
+        public void SaveDatas(List<BaseNode> nodes){
+
+
+            PerlinNoiseDatas.Clear();
+            OutputDatas.Clear();
+            AddDatas.Clear();
+            ClampDatas.Clear();
+       
+
+
+
+            nodes.ForEach(baseNode =>
+            {
+                switch (baseNode)
+                {
+                  
+                    case OutputNode node:
+                        OutputDatas.Add((OutputData)node.GetNodeData());
+                        break;
+                  
+                    case PerlinNoiseNode node:
+                        PerlinNoiseDatas.Add((PerlinNoiseData)node.GetNodeData());
+                        break;
+
+                    case AddNode node:
+                        AddDatas.Add((AddData)node.GetNodeData());
+                        break;
+
+                    case ClampNode node:
+                        ClampDatas.Add((ClampData)node.GetNodeData());
+                        break;
+
+            
+     
+                    default:
+                        break;
+                }
+            });
+        }
+
+
 
 
     }
