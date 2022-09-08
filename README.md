@@ -7,3 +7,5 @@ Utility libraries to simplify modifying unity terrain at runtime. Uses height-ma
 ![Nodes Graph](https://raw.githubusercontent.com/nickolanack/unity-terrain-builder/main/Examples/nodes.png)
 
 ![Nodes Graph](https://raw.githubusercontent.com/nickolanack/unity-terrain-builder/main/Examples/game.png)
+
+![Nodes Graph](https://raw.githubusercontent.com/nickolanack/unity-terrain-builder/main/Examples/terrain.png)
