@@ -20,13 +20,20 @@ using UnityEngine.UIElements;
         bool invert=false;
         bool scale=true;
 
+        public ClampNode() :base() { }
+        public ClampNode(Vector2 position, ProceduralEditor editorWindow, ProceduralGraphView graphView) :base(position, editorWindow, graphView){}
 
-        public ClampNode() { }
+        public override BaseNode Instantiate(){
+            return new ClampNode();
+        }
 
-        public ClampNode(Vector2 position, ProceduralEditor editorWindow, ProceduralGraphView graphView) :base(position, editorWindow, graphView, "Clamp Scale")
+        protected override void AddStyleSheets()
         {
-
             AddStyleSheet("EventNodeStyleSheet");
+        }
+
+        public override string GetTitle(){
+            return "Clamp/Scale";
         }
 
         protected override void AddPorts()
@@ -70,14 +77,16 @@ using UnityEngine.UIElements;
         }
 
 
-        public ClampNode SetData(ClampData data)
+        public override BaseNode SetData(BaseData data)
         {
 
-            min=data.Min;
-            max=data.Max;
-            prenormalize=data.Prenormalize;
-            invert=data.Invert;
-            scale=data.Scale;
+            ClampData clampData=(ClampData) data;
+
+            min=clampData.Min;
+            max=clampData.Max;
+            prenormalize=clampData.Prenormalize;
+            invert=clampData.Invert;
+            scale=clampData.Scale;
 
             base.SetData();
             return this;
@@ -146,6 +155,10 @@ public class ClampData : BaseData
         }
 
         return map;
+    }
+
+    public override BaseNode InstantiateNode(){
+        return new ClampNode();
     }
 }
 

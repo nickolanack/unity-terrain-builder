@@ -8,11 +8,22 @@ using UnityEngine.UIElements;
 
 public class OutputNode : BaseNode
 {
-    public OutputNode() { }
+  
 
-    public OutputNode(Vector2 position, ProceduralEditor editorWindow, ProceduralGraphView graphView) :base(position, editorWindow, graphView,  "Terrain Data")
+    public OutputNode() :base() { }
+    public OutputNode(Vector2 position, ProceduralEditor editorWindow, ProceduralGraphView graphView) :base(position, editorWindow, graphView){}
+
+    public override BaseNode Instantiate(){
+        return new OutputNode();
+    }
+
+    protected override void AddStyleSheets()
     {
         AddStyleSheet("OutputNodeStyleSheet");
+    }
+
+    public override string GetTitle(){
+        return "Terrain Data";
     }
 
 
@@ -45,11 +56,13 @@ public class OutputNode : BaseNode
     }
 
 
-    public OutputNode SetData(OutputData data)
+    public override BaseNode SetData(BaseData data)
     {
 
-            base.SetData();
-            return this;
+        OutputData outputData=(OutputData) data;
+
+        base.SetData();
+        return this;
     }
 }
 
@@ -64,5 +77,8 @@ public class OutputData : BaseData
        return inputs[0];
      }
 
+     public override BaseNode InstantiateNode(){
+        return new OutputNode();
+    }
 
 }

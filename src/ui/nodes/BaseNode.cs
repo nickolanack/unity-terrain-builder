@@ -20,11 +20,16 @@ public abstract class BaseNode : Node
 
     public string NodeGuid { get => nodeGuid; set => nodeGuid = value; }
 
+
     public BaseNode()
     {
-        AddStyleSheet("NodeStyleSheet");   
+       
     }
 
+
+    public virtual string GetTitle(){
+        return "Node Name";
+    }
 
     public void AddStyleSheet(string name){
 
@@ -34,13 +39,14 @@ public abstract class BaseNode : Node
         }
     }
 
-    public BaseNode(Vector2 position, ProceduralEditor editorWindow, ProceduralGraphView graphView, string nodeTitle) : this()
+    public BaseNode DrawNode(Vector2 position, ProceduralEditor editorWindow, ProceduralGraphView graphView) 
     {
+        AddStyleSheet("NodeStyleSheet");   
 
         this.editorWindow = editorWindow;
         this.graphView = graphView;
 
-        title = nodeTitle;
+        title = GetTitle();
 
 
         SetPosition(new Rect(position, defaultNodeSize));   // Set Position
@@ -52,9 +58,24 @@ public abstract class BaseNode : Node
         RefreshExpandedState();
         RefreshPorts();
 
+        AddStyleSheets();
+
+        return this;
+    }
+
+
+
+    public BaseNode(Vector2 position, ProceduralEditor editorWindow, ProceduralGraphView graphView) : this()
+    {
+        DrawNode(position, editorWindow, graphView);
     }
 
     protected virtual void AddFields()
+    {
+
+    }
+
+    protected virtual void AddStyleSheets()
     {
 
     }
@@ -97,12 +118,18 @@ public abstract class BaseNode : Node
     }
 
 
+
+    public abstract BaseNode Instantiate();
+
     public abstract BaseData GetNodeData();
+
 
 
     public void SetData(){
         OnSetData();
     }
+
+    public abstract BaseNode SetData(BaseData data);
 
     public void UpdatedData(){
        
@@ -161,7 +188,7 @@ public abstract class BaseNode : Node
 
 
 [System.Serializable]
-public class BaseData
+public abstract class BaseData
 {
     public string NodeGuid;
     public Vector2 Position;
@@ -189,5 +216,8 @@ public class BaseData
         return GetStyleMap(input, inputs);
 
     }
+
+    public abstract BaseNode InstantiateNode();
+
 
 }

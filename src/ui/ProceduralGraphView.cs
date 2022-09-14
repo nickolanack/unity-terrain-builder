@@ -77,63 +77,28 @@ public class ProceduralGraphView : GraphView
 
 
 
-      
-        // public EndNode CreateEndNode(Vector2 position)
-        // {
-        //     return new EndNode(position, editorWindow, this);
-        // }
-
-
-
-
-
-        public OutputNode CreateOutputNode(Vector2 position)
-        {
-            return new OutputNode(position, editorWindow, this);
-        }
-
-        public PerlinNoiseNode CreatePerlinNoiseNode(Vector2 position)
-        {
-            return new PerlinNoiseNode(position, editorWindow, this);
-        }
-
-        public AddNode CreateAddNode(Vector2 position)
-        {
-            return new AddNode(position, editorWindow, this);
-        }
-
-        public ClampNode CreateClampNode(Vector2 position)
-        {
-            return new ClampNode(position, editorWindow, this);
-        }
+    
 
 
         public void CreateNodes(ProceduralGraphObject graphObject)
         {
            
 
-            foreach (OutputData node in graphObject.OutputDatas)
+
+
+            foreach (BaseData node in graphObject.AllNodes())
             {
-                InitNode(CreateOutputNode(node.Position).SetData(node), node);
+                
+                InitNode(
+                    node.InstantiateNode().DrawNode(
+                        node.Position, editorWindow, this
+                    ).SetData(node), 
+                    node);
+                //InitNode(CreateOutputNode(node.Position).SetData(node), node);
             }
 
           
-            foreach (PerlinNoiseData node in graphObject.PerlinNoiseDatas)
-            {
-                InitNode(CreatePerlinNoiseNode(node.Position).SetData(node), node);
-            }
-
-
-            foreach (AddData node in graphObject.AddDatas)
-            {
-                InitNode(CreateAddNode(node.Position).SetData(node), node);
-
-            }
-
-            foreach (ClampData node in graphObject.ClampDatas)
-            {
-                InitNode(CreateClampNode(node.Position).SetData(node), node);
-            }
+           
 
         
         }
@@ -147,41 +112,23 @@ public class ProceduralGraphView : GraphView
         public List<SearchTreeEntry> SearchNodeTypes(){
 
             return new  List<SearchTreeEntry>{
-                searchWindow.AddNodeSearch("Terrain Heightmap", new OutputNode()),
-                searchWindow.AddNodeSearch("PerlinNoise",new PerlinNoiseNode()),
-                searchWindow.AddNodeSearch("Addition",new AddNode()),
-                searchWindow.AddNodeSearch("Clamp",new ClampNode()),
+                searchWindow.AddNodeSearch(new OutputNode()),
+                searchWindow.AddNodeSearch(new PerlinNoiseNode()),
+                searchWindow.AddNodeSearch(new AddNode()),
+                searchWindow.AddNodeSearch(new ClampNode()),
+                searchWindow.AddNodeSearch(new FilterNode()),
             };
         }
 
 
         public bool InstantiateNode(SearchTreeEntry searchTreeEntry, Vector2 position){
 
-            switch (searchTreeEntry.userData)
-            {
-               
-                case PerlinNoiseNode node:
-                    AddElement(CreatePerlinNoiseNode(position));
-                    return true;
 
-                case OutputNode node:
-                    AddElement(CreateOutputNode(position));
-                    return true;
+            BaseNode node=(BaseNode)searchTreeEntry.userData;
+            AddElement(node.Instantiate().DrawNode(position, editorWindow, this));
 
-                case AddNode node:
-                    AddElement(CreateAddNode(position));
-                    return true;
+            return true;
 
-                case ClampNode node:
-                    AddElement(CreateClampNode(position));
-                    return true;
-
-         
-
-                default:
-                    break;
-            }
-            return false;
 
 
         }

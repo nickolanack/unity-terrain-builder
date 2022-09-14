@@ -20,13 +20,24 @@ using UnityEngine.UIElements;
         float seed=0;
         bool normalize;
 
-        public PerlinNoiseNode() { }
+    
+        public PerlinNoiseNode() :base() { }
+        public PerlinNoiseNode(Vector2 position, ProceduralEditor editorWindow, ProceduralGraphView graphView) :base(position, editorWindow, graphView){}
 
-        public PerlinNoiseNode(Vector2 position, ProceduralEditor editorWindow, ProceduralGraphView graphView) :base(position, editorWindow, graphView, "Perlin Noise")
-        {
-            AddStyleSheet("PerlinNoiseStyleSheet"); 
-            
+        public override BaseNode Instantiate(){
+            return new PerlinNoiseNode();
         }
+
+
+        protected override void AddStyleSheets()
+        {
+            AddStyleSheet("PerlinNoiseStyleSheet");
+        }
+
+        public override string GetTitle(){
+            return "Perlin Noise";
+        }
+
 
         protected override void AddPorts()
         {
@@ -73,14 +84,17 @@ using UnityEngine.UIElements;
             return nodeData;
         }
 
-        public PerlinNoiseNode SetData(PerlinNoiseData data)
+        public override BaseNode SetData(BaseData data)
         {
 
-            size=data.Size;
-            scale=data.Scale;
-            offset=data.Offset;
-            seed=data.Seed;
-            normalize=data.Normalize;
+            PerlinNoiseData perlinNoiseData=(PerlinNoiseData) data;
+
+
+            size=perlinNoiseData.Size;
+            scale=perlinNoiseData.Scale;
+            offset=perlinNoiseData.Offset;
+            seed=perlinNoiseData.Seed;
+            normalize=perlinNoiseData.Normalize;
 
             base.SetData();
             return this;
@@ -104,7 +118,7 @@ public class PerlinNoiseData : BaseData
 
         StyleMap style=new StyleMap(input.GetWidth(), input.GetHeight(), 0);
 
-        style.SetNoiseOffset((int)Seed*100, (int)Seed*100);
+        style.SetSeed((int)Seed*100);
         style.AddPerlinNoise(Size, Scale, Offset);
         if(Normalize){
                 style.Normalize();
@@ -112,6 +126,10 @@ public class PerlinNoiseData : BaseData
         return style;
 
      }
+
+     public override BaseNode InstantiateNode(){
+        return new PerlinNoiseNode();
+    }
 }
 
 

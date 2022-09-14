@@ -17,13 +17,23 @@ using UnityEngine.UIElements;
         bool normalize=false;
         bool subtract=false;
 
-        public AddNode() { }
 
-        public AddNode(Vector2 position, ProceduralEditor editorWindow, ProceduralGraphView graphView) :base(position, editorWindow, graphView, "Addition/Subtraction")
+        public string title="Addition/Subtraction";
+
+        public AddNode() :base() { }
+        public AddNode(Vector2 position, ProceduralEditor editorWindow, ProceduralGraphView graphView) :base(position, editorWindow, graphView){}
+
+        public override BaseNode Instantiate(){
+            return new AddNode();
+        }
+
+        protected override void AddStyleSheets()
         {
-            
             AddStyleSheet("EventNodeStyleSheet");
-           
+        }
+
+        public override string GetTitle(){
+            return "Addition/Subtraction";
         }
 
         protected override void AddPorts()
@@ -57,11 +67,13 @@ using UnityEngine.UIElements;
         }
 
 
-        public AddNode SetData(AddData data)
+        public override BaseNode SetData(BaseData data)
         {
 
-            normalize=data.Normalize;
-            subtract=data.Subtract;
+            AddData addData=(AddData) data;
+
+            normalize=addData.Normalize;
+            subtract=addData.Subtract;
 
             base.SetData();
             return this;
@@ -91,10 +103,10 @@ public class AddData : BaseData
         foreach(StyleMap style in inputs){
 
             if(sub){
-                 Debug.Log(NodeGuid+" Subtract map");
+                 //Debug.Log(NodeGuid+" Subtract map");
                  map.Subtract(style);
             }else{
-                Debug.Log(NodeGuid+" Add map");
+                //Debug.Log(NodeGuid+" Add map");
                 map.Add(style);
                 if(Subtract){
                     sub=true;
@@ -109,6 +121,10 @@ public class AddData : BaseData
         map.Clamp(0,1);
 
         return map;
+    }
+
+    public override BaseNode InstantiateNode(){
+        return new AddNode();
     }
 
     

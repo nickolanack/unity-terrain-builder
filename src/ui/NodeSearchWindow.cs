@@ -41,9 +41,9 @@ public class NodeSearchWindow : ScriptableObject, ISearchWindowProvider
         return tree;
     }
 
-    public SearchTreeEntry AddNodeSearch(string name, BaseNode baseNode)
+    public SearchTreeEntry AddNodeSearch(BaseNode baseNode)
     {
-        SearchTreeEntry tmp = new SearchTreeEntry(new GUIContent(name, iconImage))
+        SearchTreeEntry tmp = new SearchTreeEntry(new GUIContent(baseNode.GetTitle(), iconImage))
         {
             level = 2,
             userData = baseNode

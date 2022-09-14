@@ -11,8 +11,10 @@ public class StyleMap{
 	private float[,] map;
 
 
-    public int randomXOffset=-1;
-    public int randomYOffset=-1;
+    public int seedIndexOffsetX=0;
+    public int seedIndexOffsetY=0;
+
+    public int seedValue=0;
 
 	public StyleMap(int width, int height):this(width, height, 0){
 
@@ -22,22 +24,31 @@ public class StyleMap{
   
 
 
-    public StyleMap RandomizeNoiseOffset(){
+    public StyleMap RandomizeSeed(){
 
 
-        randomXOffset=GetWidth()*Random.Range(0, 1000);
-        randomYOffset=GetHeight()*Random.Range(0, 1000);
+        seedValue=GetWidth()*Random.Range(0, 1000);
+       
+        return this;
+
+    }
+
+
+    public StyleMap SetSeed(int s){
+
+
+        seedValue=s;
 
         return this;
 
     }
 
 
-     public StyleMap SetNoiseOffset(int x, int y){
+     public StyleMap SetSeedIndexOffset(int x, int y){
 
 
-        randomXOffset=x;
-        randomYOffset=y;
+        seedIndexOffsetX=x;
+        seedIndexOffsetY=y;
 
         return this;
 
@@ -523,11 +534,50 @@ public class StyleMap{
             {
 
                 float value=map[x,y];
-                value+=Mathf.Clamp((Mathf.PerlinNoise(((x+randomXOffset)*100.0f)/(width*size), ((y+randomYOffset)*100.0f)/(height*size))+offset)*scale, 0, 1);
+                value+=Mathf.Clamp((Mathf.PerlinNoise(((x+seedIndexOffsetX+seedValue)*100.0f)/(width*size), ((y+seedIndexOffsetY)*100.0f)/(height*size))+offset)*scale, 0, 1);
                 map[x, y]=value;
 
             }
         }
+
+        return this;
+
+    }
+
+
+    public StyleMap FilterSobel(){
+
+
+        int width=GetWidth();
+        int height=GetHeight();
+
+        float[,] map2=new float[width, height];
+
+        for (int y = 0; y < height; y++){
+            for (int x = 0; x < width; x++)
+            {
+
+                float slope=0;
+                int count=0;
+                for(int i=y-1; i<=y+1; i++){
+                    if(i>=0&&i<height){
+                        for(int j=x-1; j<=x+1; j++){
+                            if(j>=0&&j<width&&(i!=x||j!=y)){
+                                slope =Mathf.Max(slope, Mathf.Abs(map[j,i] - map[x, y]));
+                                count++;
+                            }
+                        }
+                    }
+                }
+
+                //Debug.Log("x:"+x+", y:"+y+"= "+slope+" ("+count+")");
+
+                map2[x, y]=slope;
+                
+            }
+        }
+
+        map=map2;
 
         return this;
 
@@ -546,7 +596,7 @@ public class StyleMap{
 
     public static StyleMap ForTerrainHeight(Terrain t){
 
-    	return (new StyleMap(t.terrainData.heightmapResolution, t.terrainData.heightmapResolution)).RandomizeNoiseOffset();
+    	return (new StyleMap(t.terrainData.heightmapResolution, t.terrainData.heightmapResolution));
     }
 
 
