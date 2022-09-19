@@ -1,0 +1,16 @@
+.EventBox{
+	flex-direction: row;
+}
+
+.EventObject{
+
+}
+
+.node #title{
+	background-color: cornflowerblue;
+}
+
+.node #title #title-label{
+	color: black;
+	-unity-font-style: bold;
+}

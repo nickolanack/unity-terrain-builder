@@ -27,6 +27,7 @@ public abstract class BaseNode : Node
     }
 
 
+
     public virtual string GetTitle(){
         return "Node Name";
     }
@@ -115,6 +116,11 @@ public abstract class BaseNode : Node
 
     public StyleMap GetStyleMapOut(){
         return GetNodeData().GetStyleMap(new StyleMap(200,150,0),  InputNodeStyleMaps());
+    }
+
+
+     public StyleMap GetStyleMapOut(StyleMap templateMap){
+        return GetNodeData().GetStyleMap(templateMap,  InputNodeStyleMaps());
     }
 
 
@@ -207,7 +213,9 @@ public abstract class BaseData
 
         List<StyleMap> inputs =new List<StyleMap>();
     
-        StyleMap style= new StyleMap(input.GetWidth(), input.GetHeight(), 0);
+        //StyleMap style= new StyleMap(input.GetWidth(), input.GetHeight(), 0);
+        input.SetTileXY(graph.GetTileX(), graph.GetTileY());
+
 
         foreach(BaseData data in graph.GetInputsTo(NodeGuid)){
             inputs.Add(data.GetStyleMap(input, graph));

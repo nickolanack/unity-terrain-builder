@@ -32,6 +32,26 @@ using System.Linq;
         }
 
 
+        int tileX=0;
+        int tileY=0;
+
+        public void SetTileXY(int x, int y){
+            tileX=x;
+            tileY=y;
+        }
+
+
+        public int GetTileX(){
+            return tileX;
+        }
+
+        public int GetTileY(){
+            return tileY;
+        }
+
+
+
+
         private  void ClearLists(){
             PerlinNoiseDatas.Clear();
             OutputDatas.Clear();

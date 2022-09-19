@@ -6,7 +6,6 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-
 public class NodeField{
 
 
@@ -19,6 +18,13 @@ public class NodeField{
 	public NodeField(BaseNode node) {
 
 		this.node=node;
+
+	}
+
+
+	private void AddToNode(UnityEngine.UIElements.VisualElement field){
+
+		 node.mainContainer.Add(field);
 
 	}
 
@@ -49,7 +55,37 @@ public class NodeField{
         });
 
 
-        node.mainContainer.Add(field);
+       AddToNode(field);
+	}
+
+
+	/**
+	 * To add a float value field simply call the following within the nods AddFields method
+	 * 
+	 * 		(new NodeField(this)).AddFloatValue("someFieldName", ()=>{ return someInstanceFloatVariable; }, (value)=>{ someInstanceFloatVariable=value; });
+	 */
+
+	public void AddIntegerValue(string label, ValueGetter<int> getter, ValueSetter<int> setter){
+
+		IntegerField field=new IntegerField(){
+	       label=label,
+	       value=getter()
+        };
+
+
+        node.OnSetData+=delegate (){ 
+        	field.value=getter(); 
+        };
+
+        field.RegisterCallback<ChangeEvent<int>>(delegate (ChangeEvent<int> evt){
+            
+            setter(field.value);
+            node.UpdatedData();
+        
+        });
+
+
+       AddToNode(field);
 	}
 
 
@@ -79,7 +115,68 @@ public class NodeField{
 
         });
 
-        node.mainContainer.Add(field);
+        AddToNode(field);
+	}
+
+
+	/**
+	 * To add a toggle/bool value...
+	 * 
+	 * 		(new NodeField(this)).AddToggle("someFieldName", ()=>{ return someInstanceBoolVariable; }, (value)=>{ someInstanceBoolVariable=value; });
+	 */
+
+	public void AddDropDownListValue(string label, List<string> choices,  ValueGetter<string> getter, ValueSetter<string> setter){
+
+
+		DropdownField field=new DropdownField(){
+           label=label,
+           choices=choices,
+           value=getter()
+        };
+
+        node.OnSetData+=delegate (){ 
+        	field.value=getter(); 
+        };
+        
+      
+        field.RegisterCallback<ChangeEvent<string>>(evt=>{
+
+            setter(field.value);
+        	node.UpdatedData();
+
+        });
+
+        AddToNode(field);
+	}
+
+
+	/**
+	 * To add a toggle/bool value...
+	 * 
+	 * 		(new NodeField(this)).AddToggle("someFieldName", ()=>{ return someInstanceBoolVariable; }, (value)=>{ someInstanceBoolVariable=value; });
+	 */
+
+	public void AddAnimationCurveValue(string label, ValueGetter<AnimationCurve> getter, ValueSetter<AnimationCurve> setter){
+
+
+		CurveField field=new CurveField(){
+           label=label,
+           value=getter()
+        };
+
+        node.OnSetData+=delegate (){ 
+        	field.value=getter(); 
+        };
+        
+      
+        field.RegisterCallback<ChangeEvent<AnimationCurve>>(evt=>{
+
+            setter(field.value);
+        	node.UpdatedData();
+
+        });
+
+        AddToNode(field);
 	}
 
 

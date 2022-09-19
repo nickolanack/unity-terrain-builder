@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.UIElements;
+
 
 
     public class AddNode : BaseNode
@@ -15,10 +15,11 @@ using UnityEngine.UIElements;
         
 
         bool normalize=false;
-        bool subtract=false;
+
+        string operation="add";
 
 
-        public string title="Addition/Subtraction";
+        public string title="Combine";
 
         public AddNode() :base() { }
         public AddNode(Vector2 position, ProceduralEditor editorWindow, ProceduralGraphView graphView) :base(position, editorWindow, graphView){}
@@ -29,11 +30,11 @@ using UnityEngine.UIElements;
 
         protected override void AddStyleSheets()
         {
-            AddStyleSheet("EventNodeStyleSheet");
+            AddStyleSheet("MathNodeStyleSheet");
         }
 
         public override string GetTitle(){
-            return "Addition/Subtraction";
+            return "Arithmetic";
         }
 
         protected override void AddPorts()
@@ -46,8 +47,10 @@ using UnityEngine.UIElements;
         {
 
 
-            (new NodeField(this)).AddToggleValue("Normalize", ()=>{ return normalize; }, (value)=>{ normalize=value; });
-            (new NodeField(this)).AddToggleValue("Subract", ()=>{ return subtract; }, (value)=>{ subtract=value; });
+
+            (new NodeField(this)).AddToggleValue("Normalize out", ()=>{ return normalize; }, (value)=>{ normalize=value; });
+            (new NodeField(this)).AddDropDownListValue("Operation", new List<string>(){"add","subtract", "multiply"}, ()=>{ return operation; }, (value)=>{ operation=value; });
+
             new StyleMapPreview(this);
            
         }
@@ -60,7 +63,7 @@ using UnityEngine.UIElements;
                 NodeGuid = NodeGuid,
                 Position = GetPosition().position,
                 Normalize = normalize,
-                Subtract = subtract
+                Operation = operation
             };
 
             return nodeData;
@@ -73,7 +76,7 @@ using UnityEngine.UIElements;
             AddData addData=(AddData) data;
 
             normalize=addData.Normalize;
-            subtract=addData.Subtract;
+            operation=addData.Operation;
 
             base.SetData();
             return this;
@@ -88,29 +91,41 @@ public class AddData : BaseData
 {
 
     public bool Normalize;
-    public bool Subtract;
+    public string Operation;
 
 
 
     public override StyleMap GetStyleMap(StyleMap input, List<StyleMap> inputs){
        
-        StyleMap map= new StyleMap(input.GetWidth(), input.GetHeight(), 0);
+        StyleMap map= new StyleMap(input);
 
 
        
 
-        bool sub=false;
+        bool first=true;
         foreach(StyleMap style in inputs){
 
-            if(sub){
-                 //Debug.Log(NodeGuid+" Subtract map");
-                 map.Subtract(style);
+            if(first){
+                 map.Add(style);
+                 first=false;
+                 continue;
             }else{
-                //Debug.Log(NodeGuid+" Add map");
-                map.Add(style);
-                if(Subtract){
-                    sub=true;
+
+                if(Operation.Equals("add")){
+                    map.Add(style);
+                    continue;
                 } 
+
+                if(Operation.Equals("subtract")){
+                    map.Subtract(style);
+                    continue;
+                } 
+
+                 if(Operation.Equals("multiply")){
+                    map.Mult(style);
+                    continue;
+                } 
+               
             }
             
         }
@@ -118,7 +133,7 @@ public class AddData : BaseData
             map.Normalize();
         }
 
-        map.Clamp(0,1);
+        //map.Clamp(0,1);
 
         return map;
     }

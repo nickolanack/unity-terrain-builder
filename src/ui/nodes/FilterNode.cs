@@ -14,6 +14,8 @@ using UnityEngine.UIElements;
 
         
         public bool filterSobel=true;
+        public string filter="sobel";
+        public AnimationCurve fadeCurve;
 
         
         public FilterNode() :base() { }
@@ -29,7 +31,7 @@ using UnityEngine.UIElements;
         }
 
         public override string GetTitle(){
-            return "Sobel Filter";
+            return "Filter";
         }
 
         protected override void AddPorts()
@@ -43,8 +45,10 @@ using UnityEngine.UIElements;
         {
 
 
-            //(new NodeField(this)).AddFloatValue("Filter Type", ()=>{ return filter; }, (value)=>{ filter=value; });
-            
+           
+
+            (new NodeField(this)).AddDropDownListValue("Filter", new List<string>(){"sobel","radial-fade"}, ()=>{ return filter; }, (value)=>{ filter=value; });
+            (new NodeField(this)).AddAnimationCurveValue("FadeCurve", ()=>{ return fadeCurve; }, (value)=>{ fadeCurve=value; });
 
             new StyleMapPreview(this);
            
@@ -59,7 +63,9 @@ using UnityEngine.UIElements;
             {
                 NodeGuid = NodeGuid,
                 Position = GetPosition().position,
-     
+                Filter = filter,
+                FadeCurve = fadeCurve
+
             };
 
             return nodeData;
@@ -70,8 +76,9 @@ using UnityEngine.UIElements;
         {
 
             FilterData filterData=(FilterData) data;
+            filter = filterData.Filter;
+            fadeCurve = filterData.FadeCurve;
 
-            base.SetData();
             return this;
 
         }
@@ -83,11 +90,12 @@ using UnityEngine.UIElements;
 public class FilterData : BaseData
 {
 
+    public string Filter="sobel";
+    public AnimationCurve FadeCurve;
 
-    public bool FilterSobel=true;
     public override StyleMap GetStyleMap(StyleMap input, List<StyleMap> inputs){
 
-        StyleMap map = new StyleMap(input.GetWidth(), input.GetHeight(), 0);
+        StyleMap map = new StyleMap(input);
 
         foreach(StyleMap style in inputs){
            
@@ -95,8 +103,20 @@ public class FilterData : BaseData
             break;
         }
 
-       return map.FilterSobel().Normalize();
+        if(Filter.Equals("sobel")){
+            return map.FilterSobel().Normalize();
+        }
 
+        if(Filter.Equals("radial-fade")){
+
+            if(FadeCurve==null){
+                 FadeCurve=AnimationCurve.Linear(0, 0, 1, 1);
+            }
+
+            return map.RadialFade(FadeCurve);
+        }
+
+       return map;
         
     }
 

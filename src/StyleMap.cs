@@ -14,11 +14,13 @@ public class StyleMap{
     public int seedIndexOffsetX=0;
     public int seedIndexOffsetY=0;
 
+    public float perlinConst=150.0f;
+
     public int seedValue=0;
 
 	public StyleMap(int width, int height):this(width, height, 0){
 
-	}
+	}  
 
 
   
@@ -34,6 +36,16 @@ public class StyleMap{
     }
 
 
+    public StyleMap SetPerlinConst(float c){
+        perlinConst=c;
+        return this;
+    }
+
+    public float GetPerlinConst(){
+        return perlinConst;
+    }
+
+
     public StyleMap SetSeed(int s){
 
 
@@ -41,6 +53,14 @@ public class StyleMap{
 
         return this;
 
+    }
+
+
+    public StyleMap SetTileXY(int x, int y){
+
+        SetSeedIndexOffset(x*GetWidth(), y*GetHeight());
+
+        return this;
     }
 
 
@@ -58,7 +78,6 @@ public class StyleMap{
 	public StyleMap(int width, int height, float value){
 
 		map=new float[width, height];
-        
 		SetValues(value);
 
 	}
@@ -81,6 +100,10 @@ public class StyleMap{
 
         map=new float[styleMap.GetWidth(), styleMap.GetHeight()];
         this.SetValues(styleMap.Get());
+        this.SetPerlinConst(styleMap.GetPerlinConst());
+        //this.SetSeed(styleMap.seedValue);
+
+        SetSeedIndexOffset(styleMap.seedIndexOffsetX, styleMap.seedIndexOffsetY);
         
     }
 
@@ -118,7 +141,7 @@ public class StyleMap{
         for (int y = 0; y < height; y++){
             for (int x = 0; x < width; x++)
             {
-                map[x, y]=Mathf.Max(0,map[x, y]-value);             
+                map[x, y]=map[x, y]-value;             
             }
         }
 
@@ -151,7 +174,7 @@ public class StyleMap{
         for (int y = 0; y < height; y++){
             for (int x = 0; x < width; x++)
             {
-                map[x, y]=Mathf.Max(0,map[x, y]-map2[x , y]);             
+                map[x, y]=map[x, y]-map2[x , y];             
             }
         }
 
@@ -166,7 +189,7 @@ public class StyleMap{
         for (int y = 0; y < height; y++){
             for (int x = 0; x < width; x++)
             {
-                map[x, y]=Mathf.Min(1,map[x, y]+value);             
+                map[x, y]=map[x, y]+value;             
             }
         }
 
@@ -231,18 +254,11 @@ public class StyleMap{
 
     public StyleMap Normalize(){
 
-    	return Scale(1);
-    }
-
-
-
-    public StyleMap Scale(float scale){
-
-
-        int width=GetWidth();
+    	int width=GetWidth();
         int height=GetHeight();
 
         float max=-Mathf.Infinity;
+        float min=Mathf.Infinity;
         for (int y = 0; y < height; y++){
             for (int x = 0; x < width; x++)
             {
@@ -250,19 +266,32 @@ public class StyleMap{
                 if(value>max){
                     max=value;
                 }
+                if(value<min){
+                    min=value;
+                }
             }
         }
-
-        float mult=scale/max;
+        float offset=-min;
+        float mult=1.0f/(max-min);
         for (int y = 0; y < height; y++){
             for (int x = 0; x < width; x++)
             {
                 float value=map[x,y];
-                map[x, y]= value*mult;
+                map[x, y]= Mathf.Max(0, Mathf.Min((value-min)*mult, 1));
             }
         }
 
         return this;
+    }
+
+
+    /**
+     * @deprecated confusing use Add/Mult/Subtract/Normalize
+     */
+    public StyleMap Scale(float scale){
+
+
+        return Mult(scale);
 
      }
 
@@ -351,6 +380,43 @@ public class StyleMap{
 
     }
 
+
+    public StyleMap RadialFade(AnimationCurve curve){
+
+
+        int width=GetWidth();
+        int height=GetHeight();
+
+        int cx=width/2;
+        int cy=height/2;
+
+        float maxSqr=Mathf.Min(cx*cx,cy*cy);
+
+        for (int y = 0; y < height; y++){
+            for (int x = 0; x < width; x++)
+            {
+
+                float dx=x-cx;
+                float dy=y-cy;
+
+                float distSqr=dx*dx+dy*dy;
+                
+
+                float value=map[x,y];
+                value*=curve.Evaluate(Mathf.Max(0.0f, Mathf.Min((maxSqr-distSqr)/maxSqr,1.0f)));
+                map[x,y]=value;
+
+
+            }
+        }
+
+        return this;
+    }
+
+
+    /**
+     * @deprecated
+     */
     public StyleMap RadialFadeOuter(float length){
 
 
@@ -374,7 +440,7 @@ public class StyleMap{
 
 		        float value=map[x,y];
 
-                value*=Mathf.Min(1, (maxSqr-distSqr)/(maxSqr*length*2));
+                value*=Mathf.Max(0.0f, Mathf.Min((maxSqr-distSqr)/maxSqr,1.0f));
                 map[x,y]=value;
 
 
@@ -393,6 +459,9 @@ public class StyleMap{
     	return this;
     }
 
+    /**
+     * @deprecated
+     */
     public StyleMap RadialFadeInner(float length){
 
 
@@ -472,11 +541,11 @@ public class StyleMap{
 
 
 
-        for (int y = 0; y < width; y++){
-            for (int x = 0; x < height; x++)
+        for (int y = 0; y < height; y++){
+            for (int x = 0; x < width; x++)
             {
 
-                map[x, y]=map2[x,y];
+                map[x, y]=map2[x, y];
             }
         }
 
@@ -526,6 +595,8 @@ public class StyleMap{
     public StyleMap AddPerlinNoise(float size, float scale, float offset){
 
 
+        Debug.Log("Perlin tile: x"+seedIndexOffsetX+", y"+seedIndexOffsetY);
+
         int width=GetWidth();
         int height=GetHeight();
 
@@ -534,7 +605,36 @@ public class StyleMap{
             {
 
                 float value=map[x,y];
-                value+=Mathf.Clamp((Mathf.PerlinNoise(((x+seedIndexOffsetX+seedValue)*100.0f)/(width*size), ((y+seedIndexOffsetY)*100.0f)/(height*size))+offset)*scale, 0, 1);
+
+                float perlin=Mathf.PerlinNoise(((x+seedIndexOffsetX+seedValue)*perlinConst)/(width*size), ((y+seedIndexOffsetY+seedValue)*perlinConst)/(height*size));
+                float noise=(perlin+offset)*scale;
+
+                value+=noise;
+                map[x, y]=value;
+
+            }
+        }
+
+        return this;
+
+    }
+    public StyleMap MultPerlinNoise(float size, float scale, float offset){
+
+        Debug.Log("Perlin tile: x"+seedIndexOffsetX+", y"+seedIndexOffsetY);
+
+        int width=GetWidth();
+        int height=GetHeight();
+
+        for (int y = 0; y < height; y++){
+            for (int x = 0; x < width; x++)
+            {
+
+                float value=map[x,y];
+
+                float perlin=Mathf.PerlinNoise(((x+seedIndexOffsetX+seedValue)*perlinConst)/(width*size), ((y+seedIndexOffsetY+seedValue)*perlinConst)/(height*size));
+                float noise=(perlin+offset)*scale;
+
+                value*=noise;
                 map[x, y]=value;
 
             }

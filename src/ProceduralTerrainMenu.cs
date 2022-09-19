@@ -8,6 +8,9 @@ public class ProceduralTerrainMenu : MonoBehaviour
 {
 
 
+    public delegate void TerrainNeighbor(Terrain terrain, int x, int y);
+
+
     public ProceduralGraphObject proceduralTerrainFlow;
 
 
@@ -105,12 +108,80 @@ public class ProceduralTerrainMenu : MonoBehaviour
     }
 
 
+    protected void TerrainNeighborsAround(Terrain t,  TerrainNeighbor handler){
+
+        /**
+         * call delegate on all six neighbor tiles
+         * assumes all tiles are connected
+         */
+
+
+        if(t.leftNeighbor!=null){
+            handler(t.leftNeighbor, -1, -0);
+        }
+
+        // if(t.rightNeighbor!=null){
+        //     handler(t.rightNeighbor, 1, 0);
+        // }
+
+        // if(t.topNeighbor!=null){
+        //     handler(t.topNeighbor, 0, 1);
+        // }
+
+        // if(t.bottomNeighbor!=null){
+        //     handler(t.bottomNeighbor, 0, -1);
+        // }
+
+        // if(t.leftNeighbor!=null&&t.leftNeighbor.topNeighbor!=null){
+        //     handler(t.leftNeighbor.topNeighbor, -1, 1);
+        // }
+
+        // if(t.rightNeighbor!=null&&t.rightNeighbor.topNeighbor!=null){
+        //     handler(t.rightNeighbor.topNeighbor, 1, 1);
+        // }
+
+
+
+        // if(t.leftNeighbor!=null&&t.leftNeighbor.bottomNeighbor!=null){
+        //     handler(t.leftNeighbor.bottomNeighbor, -1, -1);
+        // }
+
+        // if(t.rightNeighbor!=null&&t.rightNeighbor.bottomNeighbor!=null){
+        //     handler(t.rightNeighbor.bottomNeighbor, 1, -1);
+        // }
+
+
+    }
+
     public void ApplyScriptableObject(ProceduralGraphObject flow){
 
-        TerrainEdit editor=new TerrainEdit();
-        
         Terrain t= GetComponent<Terrain>();
+
+
+        flow.SetTileXY(0, 0);
+        ApplyScriptableObject(flow, t);
+
+        //return;
+
+        TerrainNeighborsAround(t, delegate (Terrain neighbor, int x, int y){
+
+            flow.SetTileXY(x, y);
+            ApplyScriptableObject(flow, neighbor);
+
+        });
+
+    }
+
+
+    public void ApplyScriptableObject(ProceduralGraphObject flow, Terrain t){
+
+        TerrainEdit editor=new TerrainEdit();
+
+        editor.ResetHeight(t, 0);
         editor.ResetTextures(t);
+
+        //return;
+
         Vector3 pos=editor.AtCenter(t);
 
         foreach(OutputData terrainNodeData in flow.OutputDatas){
@@ -147,7 +218,7 @@ public class ProceduralTerrainMenu : MonoBehaviour
 
             if(styles.Count>0){
 
-                editor.DrawTexture(pos, t,  styles);
+                //editor.DrawTexture(pos, t,  styles);
             }
 
         }
