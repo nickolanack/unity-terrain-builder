@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: Plains
   m_EditorClassIdentifier: 
   NodeLinkDatas:
-  - BaseNodeGuid: cb1ad852-a974-40eb-a834-b76fbd681346
-    BasePortName: Out
-    TargetNodeGuid: fe4bb926-ebf9-4b56-9b0a-dc8b102468db
-    TargetPortName: Stylemap
   - BaseNodeGuid: 0c2027cf-01cc-46d7-b4c8-a7e7bb75f3a6
     BasePortName: Out
     TargetNodeGuid: 605b0198-f084-49fa-aea5-f6ed4b1234a3
@@ -25,90 +21,26 @@ MonoBehaviour:
     BasePortName: Out
     TargetNodeGuid: e96d54a7-0dbd-4c58-a320-d94b87faa199
     TargetPortName: Stylemap
-  - BaseNodeGuid: 4eaaebb1-ba10-440e-87c1-f63a17446240
+  - BaseNodeGuid: df09cc8b-d574-42e6-a7f3-da28c30f6806
     BasePortName: Out
-    TargetNodeGuid: 9b1c6a0d-a1e3-4b6a-a558-a8903251c66f
-    TargetPortName: TerrainDetail5
-  - BaseNodeGuid: 4eaaebb1-ba10-440e-87c1-f63a17446240
-    BasePortName: Out
-    TargetNodeGuid: a116e403-9e67-4c9b-8c52-d6fd08943515
-    TargetPortName: Stylemap
-  - BaseNodeGuid: 564d38c7-1d05-4e8c-97aa-7afca62f3353
-    BasePortName: Out
-    TargetNodeGuid: 769b7cd9-47c9-4e81-8434-7a2523d1dc2d
+    TargetNodeGuid: bc2f80e6-021d-4c30-9b3c-a1a072dcd2e0
     TargetPortName: Stylemap
   - BaseNodeGuid: 564d38c7-1d05-4e8c-97aa-7afca62f3353
     BasePortName: Out
     TargetNodeGuid: 331137e7-ab0c-4ce7-aa09-3802fa5ed553
     TargetPortName: Stylemap
-  - BaseNodeGuid: df09cc8b-d574-42e6-a7f3-da28c30f6806
+  - BaseNodeGuid: 605b0198-f084-49fa-aea5-f6ed4b1234a3
     BasePortName: Out
-    TargetNodeGuid: bc2f80e6-021d-4c30-9b3c-a1a072dcd2e0
-    TargetPortName: Stylemap
-  - BaseNodeGuid: 14601abb-0062-4827-8156-d92ecb42092c
-    BasePortName: Out
-    TargetNodeGuid: a400122e-a54e-41da-be43-544d33c826b9
-    TargetPortName: Stylemaps
-  - BaseNodeGuid: fac60464-41ef-4035-9d36-954adf959c2f
-    BasePortName: Out
-    TargetNodeGuid: 4eaaebb1-ba10-440e-87c1-f63a17446240
-    TargetPortName: Stylemaps
-  - BaseNodeGuid: fac60464-41ef-4035-9d36-954adf959c2f
-    BasePortName: Out
-    TargetNodeGuid: a400122e-a54e-41da-be43-544d33c826b9
-    TargetPortName: Stylemaps
-  - BaseNodeGuid: f3687665-0a65-4794-96d0-4b4a918e5aa4
-    BasePortName: Out
-    TargetNodeGuid: 39154449-57d6-4c54-a9c4-61cd527f17c5
-    TargetPortName: Stylemap
-  - BaseNodeGuid: 39154449-57d6-4c54-a9c4-61cd527f17c5
-    BasePortName: Out
-    TargetNodeGuid: e867fc59-87fc-4246-9f61-a9ae2a2b49b8
-    TargetPortName: Stylemap
-  - BaseNodeGuid: e867fc59-87fc-4246-9f61-a9ae2a2b49b8
-    BasePortName: Out
-    TargetNodeGuid: 39893fee-7a4d-4640-8b6b-22c22d3ebfb0
-    TargetPortName: Stylemap
-  - BaseNodeGuid: 39893fee-7a4d-4640-8b6b-22c22d3ebfb0
-    BasePortName: Out
-    TargetNodeGuid: 80298ece-1038-4b96-85a7-db8b5056a49a
-    TargetPortName: TerrainDetail4
-  - BaseNodeGuid: aa987079-857f-4809-a678-902bbc76e130
-    BasePortName: Out
-    TargetNodeGuid: 486c2e94-a5c6-4c25-9940-402c871d1883
-    TargetPortName: Stylemap
-  - BaseNodeGuid: 871225f7-6c0a-44a5-9498-025d500769c0
-    BasePortName: Out
-    TargetNodeGuid: 1d0346aa-2abd-485b-a549-be1bce8db030
-    TargetPortName: Stylemap
-  - BaseNodeGuid: 1d0346aa-2abd-485b-a549-be1bce8db030
-    BasePortName: Out
-    TargetNodeGuid: df09cc8b-d574-42e6-a7f3-da28c30f6806
-    TargetPortName: Stylemaps
-  - BaseNodeGuid: 486c2e94-a5c6-4c25-9940-402c871d1883
-    BasePortName: Out
-    TargetNodeGuid: df09cc8b-d574-42e6-a7f3-da28c30f6806
-    TargetPortName: Stylemaps
-  - BaseNodeGuid: bc2f80e6-021d-4c30-9b3c-a1a072dcd2e0
-    BasePortName: Out
-    TargetNodeGuid: 564d38c7-1d05-4e8c-97aa-7afca62f3353
-    TargetPortName: Stylemaps
-  - BaseNodeGuid: bc2f80e6-021d-4c30-9b3c-a1a072dcd2e0
-    BasePortName: Out
-    TargetNodeGuid: 9b1c6a0d-a1e3-4b6a-a558-a8903251c66f
-    TargetPortName: TerrainDetail3
-  - BaseNodeGuid: 769b7cd9-47c9-4e81-8434-7a2523d1dc2d
-    BasePortName: Out
-    TargetNodeGuid: fac60464-41ef-4035-9d36-954adf959c2f
-    TargetPortName: Stylemap
-  - BaseNodeGuid: 769b7cd9-47c9-4e81-8434-7a2523d1dc2d
-    BasePortName: Out
-    TargetNodeGuid: f3687665-0a65-4794-96d0-4b4a918e5aa4
+    TargetNodeGuid: 871225f7-6c0a-44a5-9498-025d500769c0
     TargetPortName: Stylemap
   - BaseNodeGuid: 605b0198-f084-49fa-aea5-f6ed4b1234a3
     BasePortName: Out
-    TargetNodeGuid: cf58deb2-d423-40ef-a7dc-95b132b10eaa
+    TargetNodeGuid: 0040859a-22da-4092-8534-6bc6e9b42d98
     TargetPortName: Stylemap
+  - BaseNodeGuid: 605b0198-f084-49fa-aea5-f6ed4b1234a3
+    BasePortName: Out
+    TargetNodeGuid: 564d38c7-1d05-4e8c-97aa-7afca62f3353
+    TargetPortName: Stylemaps
   - BaseNodeGuid: 331137e7-ab0c-4ce7-aa09-3802fa5ed553
     BasePortName: Out
     TargetNodeGuid: 3f620576-0560-498e-8f1f-44d6810f3d2c
@@ -117,77 +49,54 @@ MonoBehaviour:
     BasePortName: Out
     TargetNodeGuid: 32638912-6468-408f-af7a-88576ca3224a
     TargetPortName: HeightMap
-  - BaseNodeGuid: a116e403-9e67-4c9b-8c52-d6fd08943515
+  - BaseNodeGuid: 871225f7-6c0a-44a5-9498-025d500769c0
     BasePortName: Out
-    TargetNodeGuid: 3f620576-0560-498e-8f1f-44d6810f3d2c
-    TargetPortName: Stylemaps
-  - BaseNodeGuid: fe4bb926-ebf9-4b56-9b0a-dc8b102468db
-    BasePortName: Out
-    TargetNodeGuid: 4eaaebb1-ba10-440e-87c1-f63a17446240
-    TargetPortName: Stylemaps
-  - BaseNodeGuid: fe4bb926-ebf9-4b56-9b0a-dc8b102468db
-    BasePortName: Out
-    TargetNodeGuid: 14601abb-0062-4827-8156-d92ecb42092c
+    TargetNodeGuid: 1d0346aa-2abd-485b-a549-be1bce8db030
     TargetPortName: Stylemap
+  - BaseNodeGuid: 1d0346aa-2abd-485b-a549-be1bce8db030
+    BasePortName: Out
+    TargetNodeGuid: df09cc8b-d574-42e6-a7f3-da28c30f6806
+    TargetPortName: Stylemaps
+  - BaseNodeGuid: bc2f80e6-021d-4c30-9b3c-a1a072dcd2e0
+    BasePortName: Out
+    TargetNodeGuid: 564d38c7-1d05-4e8c-97aa-7afca62f3353
+    TargetPortName: Stylemaps
+  - BaseNodeGuid: aa987079-857f-4809-a678-902bbc76e130
+    BasePortName: Out
+    TargetNodeGuid: df09cc8b-d574-42e6-a7f3-da28c30f6806
+    TargetPortName: Stylemaps
+  - BaseNodeGuid: aa987079-857f-4809-a678-902bbc76e130
+    BasePortName: Out
+    TargetNodeGuid: f27b008b-6c27-478c-8348-47b84da0b551
+    TargetPortName: Stylemap
+  - BaseNodeGuid: f27b008b-6c27-478c-8348-47b84da0b551
+    BasePortName: Out
+    TargetNodeGuid: df09cc8b-d574-42e6-a7f3-da28c30f6806
+    TargetPortName: Stylemaps
+  - BaseNodeGuid: f27b008b-6c27-478c-8348-47b84da0b551
+    BasePortName: Out
+    TargetNodeGuid: 9b1c6a0d-a1e3-4b6a-a558-a8903251c66f
+    TargetPortName: TerrainDetail5
   - BaseNodeGuid: 0040859a-22da-4092-8534-6bc6e9b42d98
     BasePortName: Out
     TargetNodeGuid: aa987079-857f-4809-a678-902bbc76e130
     TargetPortName: Stylemap
-  - BaseNodeGuid: cf58deb2-d423-40ef-a7dc-95b132b10eaa
+  - BaseNodeGuid: e96d54a7-0dbd-4c58-a320-d94b87faa199
     BasePortName: Out
-    TargetNodeGuid: 0040859a-22da-4092-8534-6bc6e9b42d98
+    TargetNodeGuid: 83ec9efa-32e9-48e6-992f-b94b2bd8d3f7
     TargetPortName: Stylemap
-  - BaseNodeGuid: cf58deb2-d423-40ef-a7dc-95b132b10eaa
+  - BaseNodeGuid: 83ec9efa-32e9-48e6-992f-b94b2bd8d3f7
     BasePortName: Out
-    TargetNodeGuid: 871225f7-6c0a-44a5-9498-025d500769c0
-    TargetPortName: Stylemap
-  - BaseNodeGuid: cf58deb2-d423-40ef-a7dc-95b132b10eaa
-    BasePortName: Out
-    TargetNodeGuid: 564d38c7-1d05-4e8c-97aa-7afca62f3353
-    TargetPortName: Stylemaps
+    TargetNodeGuid: 32638912-6468-408f-af7a-88576ca3224a
+    TargetPortName: TerrainDetail4
   OutputDatas:
-  - NodeGuid: 9b1c6a0d-a1e3-4b6a-a558-a8903251c66f
-    Position: {x: 3258, y: 454}
-  - NodeGuid: 80298ece-1038-4b96-85a7-db8b5056a49a
-    Position: {x: 2432, y: 980}
   - NodeGuid: 32638912-6468-408f-af7a-88576ca3224a
-    Position: {x: 3592, y: -411}
+    Position: {x: 4409, y: 1140}
+  - NodeGuid: 9b1c6a0d-a1e3-4b6a-a558-a8903251c66f
+    Position: {x: 1915, y: 974}
   PerlinNoiseDatas:
-  - NodeGuid: cb1ad852-a974-40eb-a834-b76fbd681346
-    Position: {x: -363, y: 244}
-    Size: 0.4
-    Scale: 1
-    Offset: 0
-    Seed: 0
-    Octaves: 2
-    OctaveCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    MergeOperation: mask-add
-    Normalize: 0
   - NodeGuid: 0c2027cf-01cc-46d7-b4c8-a7e7bb75f3a6
-    Position: {x: -737, y: -978}
+    Position: {x: -134, y: 541}
     Size: 15
     Scale: 2
     Offset: 0
@@ -218,199 +127,99 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     MergeOperation: mask-add
-    Normalize: 1
   AddDatas:
-  - NodeGuid: a400122e-a54e-41da-be43-544d33c826b9
-    Position: {x: 2128, y: 658}
-    Normalize: 1
-    Operation: multiply
   - NodeGuid: 3f620576-0560-498e-8f1f-44d6810f3d2c
-    Position: {x: 2837, y: -679}
-    Normalize: 1
+    Position: {x: 3694, y: 863}
+    Normalize: 0
     Operation: subtract
-  - NodeGuid: 4eaaebb1-ba10-440e-87c1-f63a17446240
-    Position: {x: 2272, y: 0}
+  - NodeGuid: df09cc8b-d574-42e6-a7f3-da28c30f6806
+    Position: {x: 1833, y: 425}
     Normalize: 0
     Operation: multiply
   - NodeGuid: 564d38c7-1d05-4e8c-97aa-7afca62f3353
-    Position: {x: 1305, y: -211}
+    Position: {x: 2594, y: 286}
     Normalize: 0
     Operation: add
-  - NodeGuid: df09cc8b-d574-42e6-a7f3-da28c30f6806
-    Position: {x: 1451, y: -786}
-    Normalize: 0
-    Operation: multiply
   ClampDatas:
-  - NodeGuid: 14601abb-0062-4827-8156-d92ecb42092c
-    Position: {x: 49, y: 596}
-    Min: 0
-    Max: 1
-    Prenormalize: 1
-    Invert: 1
-    Scale: 0
-    Normalize: 0
-  - NodeGuid: fac60464-41ef-4035-9d36-954adf959c2f
-    Position: {x: 1710, y: 432}
-    Min: 0
-    Max: 1
-    Prenormalize: 0
-    Invert: 0
-    Scale: 0
-    Normalize: 0
-  - NodeGuid: f3687665-0a65-4794-96d0-4b4a918e5aa4
-    Position: {x: 664, y: 804}
-    Min: 0
-    Max: 1
-    Prenormalize: 0
-    Invert: 1
-    Scale: 0
-    Normalize: 0
-  - NodeGuid: 39154449-57d6-4c54-a9c4-61cd527f17c5
-    Position: {x: 936, y: 929}
-    Min: -100
-    Max: 0.5
-    Prenormalize: 0
-    Invert: 0
-    Scale: 1
-    Normalize: 0
-  - NodeGuid: e867fc59-87fc-4246-9f61-a9ae2a2b49b8
-    Position: {x: 1174, y: 938}
-    Min: 0
-    Max: 10
-    Prenormalize: 0
-    Invert: 0
-    Scale: 1
-    Normalize: 0
-  - NodeGuid: 39893fee-7a4d-4640-8b6b-22c22d3ebfb0
-    Position: {x: 1432, y: 948}
-    Min: 0
-    Max: 1
-    Prenormalize: 0
-    Invert: 0
-    Scale: 0
-    Normalize: 0
-  - NodeGuid: aa987079-857f-4809-a678-902bbc76e130
-    Position: {x: 927, y: -774}
-    Min: -1
-    Max: 1
-    Prenormalize: 1
-    Invert: 1
-    Scale: 1
-    Normalize: 0
-  - NodeGuid: 871225f7-6c0a-44a5-9498-025d500769c0
-    Position: {x: 929, y: -1109}
-    Min: -0.5
-    Max: 1
-    Prenormalize: 1
-    Invert: 0
-    Scale: 1
-    Normalize: 0
-  - NodeGuid: 1d0346aa-2abd-485b-a549-be1bce8db030
-    Position: {x: 1180, y: -1106}
-    Min: 0
-    Max: 0.8
-    Prenormalize: 0
-    Invert: 0
-    Scale: 0
-    Normalize: 0
-  - NodeGuid: 486c2e94-a5c6-4c25-9940-402c871d1883
-    Position: {x: 1181, y: -777}
-    Min: 0
-    Max: 1
-    Prenormalize: 0
-    Invert: 0
-    Scale: 0
-    Normalize: 0
-  - NodeGuid: bc2f80e6-021d-4c30-9b3c-a1a072dcd2e0
-    Position: {x: 1776, y: -818}
-    Min: 0
-    Max: 0.05
-    Prenormalize: 1
-    Invert: 0
-    Scale: 1
-    Normalize: 0
-  - NodeGuid: 769b7cd9-47c9-4e81-8434-7a2523d1dc2d
-    Position: {x: 1437, y: 419}
-    Min: -1
-    Max: 2
-    Prenormalize: 1
-    Invert: 0
-    Scale: 0
-    Normalize: 0
   - NodeGuid: 605b0198-f084-49fa-aea5-f6ed4b1234a3
-    Position: {x: -371, y: -913}
+    Position: {x: 346, y: 162}
+    Offset: 0
+    Scale: 1
+    Invert: 1
     Min: 0
     Max: 0.4
-    Prenormalize: 0
-    Invert: 1
-    Scale: 1
-    Normalize: 0
+    Clamp: 0
   - NodeGuid: 331137e7-ab0c-4ce7-aa09-3802fa5ed553
-    Position: {x: 2432, y: -740}
+    Position: {x: 3249, y: 811}
+    Offset: 0
+    Scale: 0.4
+    Invert: 0
     Min: 0
     Max: 1
-    Prenormalize: 1
-    Invert: 0
+    Clamp: 1
+  - NodeGuid: 871225f7-6c0a-44a5-9498-025d500769c0
+    Position: {x: 1084, y: 377}
+    Offset: 0
     Scale: 1
-    Normalize: 0
+    Invert: 0
+    Min: -0.5
+    Max: 1
+    Clamp: 0
+  - NodeGuid: 1d0346aa-2abd-485b-a549-be1bce8db030
+    Position: {x: 1388, y: 377}
+    Offset: 0
+    Scale: 1
+    Invert: 0
+    Min: 0
+    Max: 0.8
+    Clamp: 1
+  - NodeGuid: bc2f80e6-021d-4c30-9b3c-a1a072dcd2e0
+    Position: {x: 2106, y: 418}
+    Offset: 0
+    Scale: 0.5
+    Invert: 0
+    Min: 0
+    Max: 1
+    Clamp: 1
+  - NodeGuid: aa987079-857f-4809-a678-902bbc76e130
+    Position: {x: 1240, y: 847}
+    Offset: 0
+    Scale: 20
+    Invert: 1
+    Min: 0
+    Max: 1
+    Clamp: 1
+  - NodeGuid: f27b008b-6c27-478c-8348-47b84da0b551
+    Position: {x: 1528, y: 865}
+    Offset: -0.5
+    Scale: 2
+    Invert: 0
+    Min: 0
+    Max: 1
+    Clamp: 1
   - NodeGuid: e96d54a7-0dbd-4c58-a320-d94b87faa199
-    Position: {x: 3218, y: -437}
-    Min: -1
-    Max: 0.3
-    Prenormalize: 1
-    Invert: 0
+    Position: {x: 3959, y: 995}
+    Offset: 0
     Scale: 1
-    Normalize: 0
-  - NodeGuid: a116e403-9e67-4c9b-8c52-d6fd08943515
-    Position: {x: 2527, y: -295}
+    Invert: 0
     Min: 0
-    Max: 0.01
-    Prenormalize: 1
+    Max: 0.3
+    Clamp: 0
+  - NodeGuid: 83ec9efa-32e9-48e6-992f-b94b2bd8d3f7
+    Position: {x: 3939, y: 1357}
+    Offset: -0.1
+    Scale: 9.3
     Invert: 0
-    Scale: 1
-    Normalize: 0
-  - NodeGuid: fe4bb926-ebf9-4b56-9b0a-dc8b102468db
-    Position: {x: 505, y: 213}
     Min: 0
     Max: 1
-    Prenormalize: 0
-    Invert: 0
-    Scale: 1
-    Normalize: 0
+    Clamp: 1
   FilterDatas:
   - NodeGuid: 0040859a-22da-4092-8534-6bc6e9b42d98
-    Position: {x: 583, y: -679}
+    Position: {x: 964, y: 857}
     Filter: sobel
     FadeCurve:
       serializedVersion: 2
       m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-  - NodeGuid: cf58deb2-d423-40ef-a7dc-95b132b10eaa
-    Position: {x: -9, y: -546}
-    Filter: radial-fade
-    FadeCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4

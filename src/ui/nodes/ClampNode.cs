@@ -12,14 +12,17 @@ using UnityEngine.UIElements;
         
 
 
-        
+        float offset=0;
+        float scale=1;
+
+
+        bool invert=false;
+        bool clamp=true;
 
         float min=0;
         float max=1;
-        bool prenormalize=true;
-        bool invert=false;
-        bool scale=true;
-        bool normalize=false;
+
+
 
 
         public ClampNode() :base() { }
@@ -35,7 +38,7 @@ using UnityEngine.UIElements;
         }
 
         public override string GetTitle(){
-            return "Clamp/Scale/Invert";
+            return "Offset/Scale/Clamp/Invert";
         }
 
         protected override void AddPorts()
@@ -48,13 +51,16 @@ using UnityEngine.UIElements;
         protected override void AddFields()
         {
 
+            (new NodeField(this)).AddFloatValue("Offset", ()=>{ return offset; }, (value)=>{ offset=value; });
+            (new NodeField(this)).AddFloatValue("Scale", ()=>{ return scale; }, (value)=>{ scale=value; });
+
+            (new NodeField(this)).AddToggleValue("Invert", ()=>{ return invert; }, (value)=>{ invert=value; });
+
+             (new NodeField(this)).AddToggleValue("Clamp", ()=>{ return clamp; }, (value)=>{ clamp=value; });
 
             (new NodeField(this)).AddFloatValue("Min", ()=>{ return min; }, (value)=>{ min=value; });
             (new NodeField(this)).AddFloatValue("Max", ()=>{ return max; }, (value)=>{ max=value; });
-            (new NodeField(this)).AddToggleValue("Normalize in", ()=>{ return prenormalize; }, (value)=>{ prenormalize=value; });
-            (new NodeField(this)).AddToggleValue("Invert", ()=>{ return invert; }, (value)=>{ invert=value; });
-            (new NodeField(this)).AddToggleValue("Scale to fit", ()=>{ return scale; }, (value)=>{ scale=value; });
-            (new NodeField(this)).AddToggleValue("Normalize out", ()=>{ return normalize; }, (value)=>{ normalize=value; });
+           
 
             new StyleMapPreview(this);
            
@@ -71,10 +77,11 @@ using UnityEngine.UIElements;
                 Position = GetPosition().position,
                 Min = min,
                 Max = max,
-                Prenormalize = prenormalize, 
                 Invert = invert,
+                Clamp = clamp,
                 Scale = scale,
-                Normalize = normalize
+                Offset = offset
+
             };
 
             return nodeData;
@@ -88,10 +95,10 @@ using UnityEngine.UIElements;
 
             min=clampData.Min;
             max=clampData.Max;
-            prenormalize=clampData.Prenormalize;
             invert=clampData.Invert;
             scale=clampData.Scale;
-            normalize=clampData.Normalize;
+            offset=clampData.Offset;
+            clamp=clampData.Clamp;
 
             base.SetData();
             return this;
@@ -105,13 +112,19 @@ using UnityEngine.UIElements;
 public class ClampData : BaseData
 {
 
+
+
+
+    public float Offset=0;
+    public float Scale=1;
+
+    public bool Invert;
+
     public float Min;
     public float Max;
 
-    public bool Prenormalize;
-    public bool Invert;
-    public bool Scale;
-    public bool Normalize;
+    public bool Clamp;
+
 
 
     public override StyleMap GetStyleMap(StyleMap input, List<StyleMap> inputs){
@@ -125,30 +138,16 @@ public class ClampData : BaseData
            
            	map.Add(style);	
 
-            if(Prenormalize){
-                map.Normalize();
-            }
+            map.Add(Offset);
+            map.Mult(Scale);
 
             if(Invert){
                 map.Invert();
             }
 
-
-           	if(Scale){
-
-                map.Mult(Max-Min);
-                map.Add(Min);
-    	 		
-    	 	}
-
-
-            map.Clamp(Min, Max);
-
-
-            if(Normalize){
-                map.Normalize();
+            if(Clamp){
+                map.Clamp(Min, Max);
             }
-        	
 
         	return map;
         }

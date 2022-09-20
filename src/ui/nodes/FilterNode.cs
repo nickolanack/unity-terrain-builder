@@ -104,7 +104,7 @@ public class FilterData : BaseData
         }
 
         if(Filter.Equals("sobel")){
-            return map.FilterSobel().Normalize();
+            return map.FilterSobel();
         }
 
         if(Filter.Equals("radial-fade")){

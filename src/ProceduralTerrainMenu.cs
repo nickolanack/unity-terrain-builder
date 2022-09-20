@@ -117,38 +117,38 @@ public class ProceduralTerrainMenu : MonoBehaviour
 
 
         if(t.leftNeighbor!=null){
-            handler(t.leftNeighbor, -1, -0);
+            handler(t.leftNeighbor, -1, 0);
         }
 
-        // if(t.rightNeighbor!=null){
-        //     handler(t.rightNeighbor, 1, 0);
-        // }
+        if(t.rightNeighbor!=null){
+            handler(t.rightNeighbor, 1, 0);
+        }
 
-        // if(t.topNeighbor!=null){
-        //     handler(t.topNeighbor, 0, 1);
-        // }
+        if(t.topNeighbor!=null){
+            handler(t.topNeighbor, 0, 1);
+        }
 
-        // if(t.bottomNeighbor!=null){
-        //     handler(t.bottomNeighbor, 0, -1);
-        // }
+        if(t.bottomNeighbor!=null){
+            handler(t.bottomNeighbor, 0, -1);
+        }
 
-        // if(t.leftNeighbor!=null&&t.leftNeighbor.topNeighbor!=null){
-        //     handler(t.leftNeighbor.topNeighbor, -1, 1);
-        // }
+        if(t.leftNeighbor!=null&&t.leftNeighbor.topNeighbor!=null){
+            handler(t.leftNeighbor.topNeighbor, -1, 1);
+        }
 
-        // if(t.rightNeighbor!=null&&t.rightNeighbor.topNeighbor!=null){
-        //     handler(t.rightNeighbor.topNeighbor, 1, 1);
-        // }
+        if(t.rightNeighbor!=null&&t.rightNeighbor.topNeighbor!=null){
+            handler(t.rightNeighbor.topNeighbor, 1, 1);
+        }
 
 
 
-        // if(t.leftNeighbor!=null&&t.leftNeighbor.bottomNeighbor!=null){
-        //     handler(t.leftNeighbor.bottomNeighbor, -1, -1);
-        // }
+        if(t.leftNeighbor!=null&&t.leftNeighbor.bottomNeighbor!=null){
+            handler(t.leftNeighbor.bottomNeighbor, -1, -1);
+        }
 
-        // if(t.rightNeighbor!=null&&t.rightNeighbor.bottomNeighbor!=null){
-        //     handler(t.rightNeighbor.bottomNeighbor, 1, -1);
-        // }
+        if(t.rightNeighbor!=null&&t.rightNeighbor.bottomNeighbor!=null){
+            handler(t.rightNeighbor.bottomNeighbor, 1, -1);
+        }
 
 
     }
@@ -218,7 +218,7 @@ public class ProceduralTerrainMenu : MonoBehaviour
 
             if(styles.Count>0){
 
-                //editor.DrawTexture(pos, t,  styles);
+                editor.DrawTexture(pos, t,  styles);
             }
 
         }

@@ -200,6 +200,10 @@ public abstract class BaseData
     public Vector2 Position;
 
 
+    private StyleMap _CacheMap;
+    private String _CacheSettingsString;
+
+
     public virtual StyleMap GetStyleMap(StyleMap input, List<StyleMap> inputs){
         return input;
     }
@@ -209,7 +213,9 @@ public abstract class BaseData
     }
 
 
-    public StyleMap GetStyleMap(StyleMap input, ProceduralGraphObject graph){
+
+
+    private StyleMap GetStyleMap(StyleMap input, ProceduralGraphObject graph){
 
         List<StyleMap> inputs =new List<StyleMap>();
     
@@ -219,6 +225,24 @@ public abstract class BaseData
 
         foreach(BaseData data in graph.GetInputsTo(NodeGuid)){
             inputs.Add(data.GetStyleMap(input, graph));
+        }
+
+        if(graph.GetOutputsFrom(NodeGuid).Count>1){
+
+            //If multiple nodes are connected to the output of this node then it we will store a cached
+            //copy for the next request (which should occur for each output)
+
+            if(_CacheMap!=null){
+               if(_CacheSettingsString.Equals(input.SettingsID())){
+                    Debug.Log("Used Cache: "+_CacheMap.ID()+" "+_CacheSettingsString);
+                    return _CacheMap;
+                }
+                Debug.Log("Cleared Cache: "+_CacheMap.ID()+" "+input.SettingsID()+" ("+_CacheSettingsString+")");
+            }
+            _CacheMap=GetStyleMap(input, inputs);
+            _CacheSettingsString=input.SettingsID();
+            Debug.Log("Create Cache: "+_CacheMap.ID()+" "+_CacheSettingsString);
+            return _CacheMap;
         }
 
         return GetStyleMap(input, inputs);

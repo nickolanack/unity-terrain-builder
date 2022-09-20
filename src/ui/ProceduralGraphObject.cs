@@ -151,6 +151,20 @@ using System.Linq;
         }
 
 
+        public  List<BaseData> GetOutputsFrom(string NodeGuid){
+             List<BaseData> list=new List<BaseData>();
+            foreach(NodeLinkData link in NodeLinkDatas){
+
+                if(link.BaseNodeGuid==NodeGuid){
+                    list.Add(GetData(link.TargetNodeGuid));
+                }
+            }
+
+
+            return list;
+        }
+
+
         
 
 

@@ -24,7 +24,6 @@ using UnityEngine.UIElements;
         string mergeOperation="add-all"; 
         AnimationCurve octaveCurve;
 
-        bool normalize;
 
     
         public PerlinNoiseNode() :base() { }
@@ -66,7 +65,6 @@ using UnityEngine.UIElements;
             (new NodeField(this)).AddAnimationCurveValue("Octave Scale Curve", ()=>{ return octaveCurve; }, (value)=>{ octaveCurve=value; });
 
 
-            (new NodeField(this)).AddToggleValue("Normalize", ()=>{ return normalize; }, (value)=>{ normalize=value; });
            
 
             new StyleMapPreview(this);
@@ -96,7 +94,6 @@ using UnityEngine.UIElements;
                 MergeOperation = mergeOperation,
                 OctaveCurve = octaveCurve,
                 Seed = seed,
-                Normalize = normalize
             };
 
             return nodeData;
@@ -115,7 +112,6 @@ using UnityEngine.UIElements;
             octaves=perlinNoiseData.Octaves;
             mergeOperation=perlinNoiseData.MergeOperation;
             octaveCurve=perlinNoiseData.OctaveCurve;
-            normalize=perlinNoiseData.Normalize;
 
             base.SetData();
             return this;
@@ -135,7 +131,6 @@ public class PerlinNoiseData : BaseData
     public int Octaves;
     public AnimationCurve OctaveCurve;
     public string MergeOperation="add";
-    public bool Normalize;
 
 
     private float OctaveScale(int i){
@@ -183,9 +178,7 @@ public class PerlinNoiseData : BaseData
             }
             style.AddPerlinNoise(OctaveSize(i)*Size, Scale*OctaveScale(i), Offset);
         }
-        if(Normalize){
-            style.Normalize();
-        }
+      
         return style;
 
      }

@@ -129,9 +129,6 @@ public class AddData : BaseData
             }
             
         }
-        if(Normalize){
-            map.Normalize();
-        }
 
         //map.Clamp(0,1);
 

@@ -377,17 +377,24 @@ public class TerrainEdit{
             float value=map[xh, yh]*weight;
 
 
+            int x_=x-x0;
+            int y_=y-y0;
+
+            if(x_<0||x_>width){
+                 Debug.Log("Out of range x-x0: ("+x+"-"+x0+") => "+x_+" | "+width);
+            }
+            if(y_<0||y_>height){
+                Debug.Log("Out of range y-y0: ("+y+"-"+y0+") => "+y_+" | "+height);
+            }
+
             for (int l = 0; l < alphamapTextureCount; l++)
             {
-                values[x-x0,y-y0,l]*=(1-value);
+                values[x_,y_,l]*=(1-value);
                 //values[0,0,l]*=(1-value);
                 //Debug.Log(l+": "+values[0,0,l]);
             }
-            values[x-x0,y-y0,layer]+=value;
-            //values[0,0,layer]+=value;
-            //Debug.Log("*"+layer+": "+values[0,0,layer]);
-
-            //terrain.terrainData.SetAlphamaps(x, y, values);
+            values[x_, y_, layer]+=value;
+            
 
 
         });

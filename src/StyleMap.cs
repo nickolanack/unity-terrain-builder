@@ -23,7 +23,21 @@ public class StyleMap{
 	}  
 
 
-  
+    private int _id=-1;
+
+    public int ID(){
+        if(_id==-1){
+            _id=(int) Random.Range(10000,99999);
+        }
+        return _id;
+    }
+
+    public string SettingsID(){
+
+        string _=":";
+        return "StyleMap:"+seedValue+_+perlinConst+_+seedIndexOffsetX+_+seedIndexOffsetY+_+GetWidth()+_+GetHeight();
+
+    }
 
 
     public StyleMap RandomizeSeed(){
@@ -58,7 +72,7 @@ public class StyleMap{
 
     public StyleMap SetTileXY(int x, int y){
 
-        SetSeedIndexOffset(x*GetWidth(), y*GetHeight());
+        SetSeedIndexOffset(x*GetWidth()-x, y*GetHeight()-y);
 
         return this;
     }
@@ -252,7 +266,14 @@ public class StyleMap{
 
     }
 
+
+    /**
+     * @deprecated
+     */
     public StyleMap Normalize(){
+
+        return this;
+
 
     	int width=GetWidth();
         int height=GetHeight();
@@ -595,7 +616,7 @@ public class StyleMap{
     public StyleMap AddPerlinNoise(float size, float scale, float offset){
 
 
-        Debug.Log("Perlin tile: x"+seedIndexOffsetX+", y"+seedIndexOffsetY);
+        //Debug.Log("Perlin tile: x"+seedIndexOffsetX+", y"+seedIndexOffsetY);
 
         int width=GetWidth();
         int height=GetHeight();
@@ -620,7 +641,7 @@ public class StyleMap{
     }
     public StyleMap MultPerlinNoise(float size, float scale, float offset){
 
-        Debug.Log("Perlin tile: x"+seedIndexOffsetX+", y"+seedIndexOffsetY);
+        //Debug.Log("Perlin tile: x"+seedIndexOffsetX+", y"+seedIndexOffsetY);
 
         int width=GetWidth();
         int height=GetHeight();
