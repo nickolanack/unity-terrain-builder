@@ -1,6 +1,6 @@
 # unity-terrain-builder
 
-Creating procedurally generated terrain in unity
+My Experiments creating procedurally generated terrain in unity
 
 Utility libraries to simplify modifying unity terrain at runtime. Uses height-map style textures to write to height, detail, and texture layers of a terrain tile
 
